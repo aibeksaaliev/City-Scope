@@ -3,13 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
-import { Token } from './token.entity';
+import * as crypto from 'crypto';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -41,10 +40,9 @@ export class User {
   @Column({ enum: ['user', 'admin'], default: 'user' })
   role: string;
 
-  @Exclude()
   @ApiHideProperty()
-  @OneToMany(() => Token, (token) => token.user)
-  tokens: Token[];
+  @Column({ unique: true })
+  token: string;
 
   @Column({ nullable: true })
   locale: string;
@@ -60,6 +58,10 @@ export class User {
 
   @Column({ nullable: true })
   lastLogin: Date;
+
+  async generateToken() {
+    this.token = crypto.randomUUID();
+  }
 
   @BeforeInsert()
   async hashPassword() {
