@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
-import { Repository } from "typeorm";
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -36,5 +36,10 @@ export class AuthService {
     }
 
     return null;
+  }
+
+  async logout(user: User) {
+    await user.generateToken();
+    await this.userRepository.save(user);
   }
 }
