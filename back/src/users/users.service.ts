@@ -15,4 +15,12 @@ export class UsersService {
     await user.generateToken();
     return this.userRepository.save(user);
   }
+
+  async findByEmail(email: string) {
+    return await this.userRepository.findOne({ where: { email } });
+  }
+
+  async save(user: User) {
+    return this.userRepository.save(user);
+  }
 }
