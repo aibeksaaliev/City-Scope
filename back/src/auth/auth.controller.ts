@@ -35,7 +35,7 @@ export class AuthController {
   @Delete('sessions')
   @UseGuards(TokenAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async logout() {
-    return { message: 'Logout successful' };
+  async logout(@Req() req: UserRequest) {
+    return this.authService.logout(req.user);
   }
 }

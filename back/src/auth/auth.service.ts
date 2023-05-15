@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,5 +41,6 @@ export class AuthService {
   async logout(user: User) {
     await user.generateToken();
     await this.userRepository.save(user);
+    return { message: 'Logout successful' };
   }
 }

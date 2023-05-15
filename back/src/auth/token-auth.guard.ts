@@ -32,7 +32,6 @@ export class TokenAuthGuard implements CanActivate {
 
     request.user = user;
 
-    await this.authService.logout(user);
     return true;
   }
 }

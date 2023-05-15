@@ -10,6 +10,7 @@ import { User } from '../users/user.entity';
 @Module({
   imports: [UsersModule, PassportModule, TypeOrmModule.forFeature([User])],
   providers: [AuthService, LocalStrategy],
+  exports: [AuthService, LocalStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
