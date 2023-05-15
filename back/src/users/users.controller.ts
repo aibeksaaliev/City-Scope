@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Patch,
   Req,
@@ -13,6 +14,9 @@ import { UserRequest } from '../auth/types';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerAvatarsStorage } from './multer.avatarsStorage';
+import { BlockUserDto } from './dto/blockUser.dto';
+import { AdminGuard } from '../auth/admin.guard';
+import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
 @Controller('users')
 export class UsersController {
@@ -22,10 +26,27 @@ export class UsersController {
   @UseGuards(TokenAuthGuard)
   @UseInterceptors(FileInterceptor('avatar', { storage: multerAvatarsStorage }))
   async editProfile(
-    @Body() formData: EditUserDto,
+    @Body() body: EditUserDto,
     @Req() req: UserRequest,
     @UploadedFile() avatar: Express.Multer.File,
   ) {
-    return this.usersService.editProfile(req.user, formData, avatar);
+    return this.usersService.editProfile(req.user, body, avatar);
+  }
+
+  @Patch('block')
+  @UseGuards(TokenAuthGuard, AdminGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async blockUser(@Body() body: BlockUserDto) {
+    return this.usersService.blockProfile(body);
+  }
+
+  @Patch('updatePassword')
+  @UseGuards(TokenAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async updatePassword(
+    @Body() body: UpdatePasswordDto,
+    @Req() req: UserRequest,
+  ) {
+    return this.usersService.updatePassword(req.user, body);
   }
 }

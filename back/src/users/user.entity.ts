@@ -47,8 +47,8 @@ export class User {
   @Column({ nullable: true })
   locale: string;
 
-  @Column({ nullable: true })
-  isBlocked: string;
+  @Column({ default: false })
+  isBlocked: boolean;
 
   @CreateDateColumn()
   registeredAt: Date;
