@@ -3,12 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
+import { Location } from '../locations/location.entity';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -58,6 +60,9 @@ export class User {
 
   @Column({ nullable: true })
   lastLogin: Date;
+
+  @OneToMany(() => Location, (location) => location.user)
+  locations: Location[];
 
   async generateToken() {
     this.token = crypto.randomUUID();

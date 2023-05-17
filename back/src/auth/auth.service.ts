@@ -43,4 +43,8 @@ export class AuthService {
     await this.userRepository.save(user);
     return { message: 'Logout successful' };
   }
+
+  async findByToken(token: string) {
+    return this.userRepository.findOne({ where: { token } });
+  }
 }
