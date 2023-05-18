@@ -3,10 +3,16 @@ import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { LocationsModule } from './locations/locations.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
-  imports: [DatabaseModule, UsersModule, AuthModule, LocationsModule],
+  imports: [
+    DatabaseModule,
+    UsersModule,
+    AuthModule,
+    LocationsModule,
+    CategoriesModule,
+  ],
   controllers: [],
   providers: [],
 })

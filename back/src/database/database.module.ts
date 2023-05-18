@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Location } from '../locations/location.entity';
+import { MainCategory } from "../categories/mainCategory.entity";
+import { SubCategory } from "../categories/subCategory.entity";
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { Location } from '../locations/location.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [User, Location],
+        entities: [User, Location, MainCategory, SubCategory],
         synchronize: true,
       }),
     }),
