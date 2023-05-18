@@ -5,12 +5,16 @@ import { Repository } from 'typeorm';
 import { CreateLocationDto } from './dto/createLocation.dto';
 import { User } from '../users/user.entity';
 import { UpdateLocationDto } from './dto/updateLocation.dto';
+import { SubCategory } from '../categories/subCategory.entity';
+import { ApproveLocationDto } from './dto/approveLocation.dto';
 
 @Injectable()
 export class LocationsService {
   constructor(
     @InjectRepository(Location)
     private locationRepository: Repository<Location>,
+    @InjectRepository(SubCategory)
+    private readonly subCategoryRepository: Repository<SubCategory>,
   ) {}
 
   async findById(id: number) {
@@ -67,6 +71,27 @@ export class LocationsService {
       });
       await this.locationRepository.delete(deletingLocation.id);
       return { message: 'Deleted successfully' };
+    } catch {
+      throw new Error('');
+    }
+  }
+
+  async approveLocation(id: number, data: ApproveLocationDto, user: User) {
+    try {
+      const selectedSubCategory = await this.subCategoryRepository.findOne({
+        where: { id: data.subCategoryId },
+      });
+
+      if (selectedSubCategory) {
+        await this.locationRepository.update(id, {
+          subCategory: selectedSubCategory,
+          approvedBy: user,
+          approvedAt: new Date(),
+          isApproved: data.status,
+        });
+
+        return await this.locationRepository.findOne({ where: { id } });
+      }
     } catch {
       throw new Error('');
     }

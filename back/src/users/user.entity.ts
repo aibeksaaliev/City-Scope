@@ -64,6 +64,9 @@ export class User {
   @OneToMany(() => Location, (location) => location.user)
   locations: Location[];
 
+  @OneToMany(() => Location, (location) => location.approvedBy)
+  approvedLocations: Location[];
+
   async generateToken() {
     this.token = crypto.randomUUID();
   }

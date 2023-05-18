@@ -19,6 +19,8 @@ import { User } from '../users/user.entity';
 import { Repository } from 'typeorm';
 import { UserRequest } from '../auth/types';
 import { UpdateLocationDto } from './dto/updateLocation.dto';
+import { RoleGuard } from '../auth/role.guard';
+import { ApproveLocationDto } from './dto/approveLocation.dto';
 
 @Controller('locations')
 export class LocationsController {
@@ -58,6 +60,17 @@ export class LocationsController {
     @Param('id') id: number,
   ) {
     return this.locationsService.updateLocation(id, body, req.user);
+  }
+
+  @Patch('approveLocation/:id')
+  @UseGuards(TokenAuthGuard, RoleGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async approveLocation(
+    @Body() body: ApproveLocationDto,
+    @Req() req: UserRequest,
+    @Param('id') id: number,
+  ) {
+    return this.locationsService.approveLocation(id, body, req.user);
   }
 
   @Delete(':id')

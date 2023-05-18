@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { MainCategory } from './mainCategory.entity';
+import { Location } from '../locations/location.entity';
 
 @Entity()
 export class SubCategory {
@@ -11,4 +18,7 @@ export class SubCategory {
 
   @ManyToOne(() => MainCategory, (mainCategory) => mainCategory.subCategories)
   mainCategory: MainCategory;
+
+  @OneToMany(() => Location, (location) => location.subCategory)
+  locations: Location[];
 }

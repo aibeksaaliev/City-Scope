@@ -8,6 +8,7 @@ import {
 import { User } from '../users/user.entity';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { SubCategory } from '../categories/subCategory.entity';
 
 @Entity()
 export class Location {
@@ -18,6 +19,9 @@ export class Location {
   @ApiHideProperty()
   @ManyToOne(() => User, (user) => user.locations, { onDelete: 'CASCADE' })
   user: User;
+
+  @ManyToOne(() => SubCategory, (subCategory) => subCategory.locations)
+  subCategory: SubCategory;
 
   @Column({ unique: true })
   title: string;
@@ -52,8 +56,10 @@ export class Location {
   @Column({ nullable: true })
   approvedAt: Date;
 
-  @Column({ nullable: true })
-  approvedBy: number;
+  @Exclude()
+  @ApiHideProperty()
+  @ManyToOne(() => User, (user) => user.approvedLocations)
+  approvedBy: User;
 
   @Column({ default: false })
   isApproved: boolean;
