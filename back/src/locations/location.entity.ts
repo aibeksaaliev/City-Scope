@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Exclude } from 'class-transformer';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { SubCategory } from '../categories/subCategory.entity';
+import { Feedback } from '../feedbacks/feedback.entity';
 
 @Entity()
 export class Location {
@@ -63,4 +65,7 @@ export class Location {
 
   @Column({ default: false })
   isApproved: boolean;
+
+  @OneToMany(() => Feedback, (feedback) => feedback.location)
+  feedbacks: Feedback[];
 }

@@ -11,6 +11,7 @@ import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { Location } from '../locations/location.entity';
+import { Feedback } from '../feedbacks/feedback.entity';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -66,6 +67,9 @@ export class User {
 
   @OneToMany(() => Location, (location) => location.approvedBy)
   approvedLocations: Location[];
+
+  @OneToMany(() => Feedback, (feedback) => feedback.user)
+  feedbacks: Feedback[];
 
   async generateToken() {
     this.token = crypto.randomUUID();

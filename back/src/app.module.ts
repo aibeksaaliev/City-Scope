@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { LocationsModule } from './locations/locations.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FeedbacksModule } from "./feedbacks/feedbacks.module";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CategoriesModule } from './categories/categories.module';
     AuthModule,
     LocationsModule,
     CategoriesModule,
+    FeedbacksModule,
   ],
   controllers: [],
   providers: [],
