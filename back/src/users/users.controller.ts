@@ -1,13 +1,15 @@
 import {
   Body,
   ClassSerializerInterceptor,
-  Controller,
+  Controller, Delete,
+  Param,
   Patch,
+  Post,
   Req,
   UploadedFile,
   UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+  UseInterceptors
+} from "@nestjs/common";
 import { UsersService } from './users.service';
 import { EditUserDto } from './dto/editUser.dto';
 import { UserRequest } from '../auth/types';
@@ -33,6 +35,16 @@ export class UsersController {
     return this.usersService.editProfile(req.user, body, avatar);
   }
 
+  @Post('addToFavorites/:id')
+  @UseGuards(TokenAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async addLocationToFavorites(
+    @Req() req: UserRequest,
+    @Param('id') id: number,
+  ) {
+    return this.usersService.addLocationToFavorites(id, req.user);
+  }
+
   @Patch('block')
   @UseGuards(TokenAuthGuard, AdminGuard)
   @UseInterceptors(ClassSerializerInterceptor)
@@ -48,5 +60,15 @@ export class UsersController {
     @Req() req: UserRequest,
   ) {
     return this.usersService.updatePassword(req.user, body);
+  }
+
+  @Delete('deleteFromFavorites/:id')
+  @UseGuards(TokenAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async removeLocationFromFavorites(
+    @Req() req: UserRequest,
+    @Param('id') id: number,
+  ) {
+    return this.usersService.removeLocationFromFavorites(id, req.user);
   }
 }

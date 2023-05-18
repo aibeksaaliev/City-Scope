@@ -68,4 +68,7 @@ export class Location {
 
   @OneToMany(() => Feedback, (feedback) => feedback.location)
   feedbacks: Feedback[];
+
+  @Column({ default: 0 })
+  favoritesCount: number;
 }

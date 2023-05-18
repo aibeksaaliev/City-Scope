@@ -6,11 +6,14 @@ import { UserCreateBody } from './types';
 import { EditUserDto } from './dto/editUser.dto';
 import { BlockUserDto } from './dto/blockUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
+import { Location } from '../locations/location.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Location)
+    private locationsRepository: Repository<Location>,
   ) {}
 
   async create(body: UserCreateBody) {
@@ -79,6 +82,53 @@ export class UsersService {
       }
     } else {
       throw new BadRequestException('New passwords do not match');
+    }
+  }
+
+  async addLocationToFavorites(id: number, user: User) {
+    try {
+      const location = await this.locationsRepository.findOne({
+        where: { id },
+      });
+
+      if (location) {
+        user.favoriteLocations = user.favoriteLocations || [];
+        user.favoriteLocations.push(location);
+        location.favoritesCount++;
+
+        await this.userRepository.save(user);
+        await this.locationsRepository.save(location);
+
+        return { message: 'Added successfully to favorites' };
+      }
+    } catch (error) {
+      throw new Error('');
+    }
+  }
+
+  async removeLocationFromFavorites(id: number, user: User) {
+    try {
+      const location = await this.locationsRepository.findOne({
+        where: { id },
+      });
+
+      if (location) {
+        user.favoriteLocations = user.favoriteLocations || [];
+        user.favoriteLocations.findIndex((loc, index) => {
+          if (loc === location) {
+            user.favoriteLocations.splice(index, 1);
+          }
+        });
+
+        location.favoritesCount--;
+
+        await this.userRepository.save(user);
+        await this.locationsRepository.save(location);
+
+        return { message: 'Removed successfully from favorites' };
+      }
+    } catch (error) {
+      throw new Error('');
     }
   }
 }

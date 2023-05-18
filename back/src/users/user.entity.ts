@@ -3,6 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -70,6 +72,10 @@ export class User {
 
   @OneToMany(() => Feedback, (feedback) => feedback.user)
   feedbacks: Feedback[];
+
+  @ManyToMany(() => Location)
+  @JoinTable()
+  favoriteLocations: Location[];
 
   async generateToken() {
     this.token = crypto.randomUUID();
