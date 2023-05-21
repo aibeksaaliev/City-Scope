@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
   UseInterceptors,
@@ -49,6 +50,12 @@ export class LocationsController {
   @UseInterceptors(ClassSerializerInterceptor)
   async getOneLocationById(@Param('id') id: number) {
     return this.locationsService.findById(id);
+  }
+
+  @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getLocationsBySubCategory(@Query('subcategory') subcategoryId: number) {
+    return this.locationsService.gelLocationsBySubCategory(subcategoryId);
   }
 
   @Patch(':id')

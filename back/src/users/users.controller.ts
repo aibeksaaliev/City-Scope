@@ -1,15 +1,16 @@
 import {
   Body,
   ClassSerializerInterceptor,
-  Controller, Delete,
+  Controller,
+  Delete,
   Param,
   Patch,
   Post,
   Req,
   UploadedFile,
   UseGuards,
-  UseInterceptors
-} from "@nestjs/common";
+  UseInterceptors,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { EditUserDto } from './dto/editUser.dto';
 import { UserRequest } from '../auth/types';

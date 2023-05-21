@@ -46,6 +46,14 @@ export class LocationsService {
     return await this.locationRepository.find();
   }
 
+  async gelLocationsBySubCategory(id: number) {
+    return this.locationRepository
+      .createQueryBuilder('location')
+      .leftJoinAndSelect('location.subCategory', 'subCategory')
+      .where('subCategory.id = :subCategoryId', { id })
+      .getMany();
+  }
+
   async updateLocation(id: number, data: UpdateLocationDto, user: User) {
     try {
       const location = await this.locationRepository.findOne({
