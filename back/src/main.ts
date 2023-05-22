@@ -1,10 +1,36 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  ValidationError,
+  ValidationPipe,
+} from '@nestjs/common';
+
+interface CustomValidationError {
+  [key: string]: string[];
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        const errors: CustomValidationError = {};
+
+        validationErrors.forEach((error) => {
+          const constraints = error.constraints;
+
+          if (constraints) {
+            errors[error.property] = Object.keys(constraints).map(
+              (key) => constraints[key],
+            );
+          }
+        });
+
+        return new BadRequestException(errors);
+      },
+    }),
+  );
   app.enableCors();
   await app.listen(8000);
 }

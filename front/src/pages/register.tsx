@@ -82,7 +82,7 @@ const Register = () => {
             </Box>
             <TextField
               label="Email"
-              type="email"
+              type="text"
               name="email"
               value={state.email}
               onChange={inputChangeHandler}

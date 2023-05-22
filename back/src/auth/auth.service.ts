@@ -13,9 +13,21 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    if (registerDto.password !== registerDto.confirmedPassword) {
-      throw new BadRequestException('Passwords do not match');
+    const user = await this.usersService.findByEmail(registerDto.email);
+
+    if (user) {
+      throw new BadRequestException({
+        email: ['User with this email is already registered'],
+      });
     }
+
+    if (registerDto.password !== registerDto.confirmedPassword) {
+      throw new BadRequestException({
+        password: ['Passwords do not match'],
+        confirmedPassword: ['Passwords do not match'],
+      });
+    }
+
     return this.usersService.create(registerDto);
   }
 
@@ -42,9 +54,5 @@ export class AuthService {
     await user.generateToken();
     await this.userRepository.save(user);
     return { message: 'Logout successful' };
-  }
-
-  async findByToken(token: string) {
-    return this.userRepository.findOne({ where: { token } });
   }
 }
