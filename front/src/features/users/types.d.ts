@@ -28,3 +28,7 @@ export interface UserType {
 export interface ValidationError {
   [key: string]: string;
 }
+
+export interface GlobalError {
+  [key: string]: string;
+}
