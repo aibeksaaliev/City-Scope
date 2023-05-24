@@ -35,6 +35,16 @@ export class UsersService {
     editedInfo: EditUserDto,
     avatar: Express.Multer.File,
   ) {
+    const checkedEmail = await this.userRepository.findOne({
+      where: { email: editedInfo.email },
+    });
+
+    if (checkedEmail) {
+      throw new BadRequestException({
+        email: ['This email address is already used by other person.'],
+      });
+    }
+
     const updatedInfo: Partial<User> = {
       firstName: editedInfo.firstName,
       lastName: editedInfo.lastName,

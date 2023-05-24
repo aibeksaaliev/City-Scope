@@ -9,20 +9,28 @@ export interface LoginMutation {
   password: string;
 }
 
+export interface ProfileEditMutation {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  avatar: string;
+}
+
 export interface UserType {
   id: number;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  phoneNumber?: string;
-  avatar?: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  avatar: string;
   role: string;
   token: string;
-  locale?: string;
+  locale: string;
   isBlocked: boolean;
   registeredAt: Date;
-  updatedAt?: Date;
-  lastLogin?: Date;
+  updatedAt: Date;
+  lastLogin: Date;
 }
 
 export interface ValidationError {

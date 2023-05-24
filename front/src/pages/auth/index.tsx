@@ -8,7 +8,7 @@ const Index = () => {
     <AuthLayout>
       <Link href="/auth/login" style={{width: "25%"}}>
         <Button
-          component="a"
+          component="div"
           variant="contained"
           fullWidth
           sx={{mb: 2, backgroundColor: "#333333", color: "#FFFFFF"}}
@@ -18,7 +18,7 @@ const Index = () => {
       </Link>
       <Link href="/auth/register"  style={{width: "25%"}}>
         <Button
-          component="a"
+          component="div"
           variant="contained"
           fullWidth
           sx={{backgroundColor: "#333333", color: "#FFFFFF"}}

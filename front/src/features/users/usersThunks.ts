@@ -1,7 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosApi } from "@/configs/axiosApi";
-import { GlobalError, LoginMutation, RegisterMutation, UserType, ValidationError } from "@/features/users/types";
+import {
+  GlobalError,
+  LoginMutation,
+  ProfileEditMutation,
+  RegisterMutation,
+  UserType,
+  ValidationError
+} from "@/features/users/types";
 import { isAxiosError } from "axios";
+import { RootState } from "@/app/store";
+import { unsetUser } from "@/features/users/usersSlice";
 
 export const register = createAsyncThunk<UserType, RegisterMutation, {rejectValue: ValidationError}>(
   'users/register',
@@ -30,6 +39,46 @@ export const login = createAsyncThunk<UserType, LoginMutation, {rejectValue: Glo
         return rejectWithValue(e.response.data as GlobalError);
       }
 
+      throw e;
+    }
+  }
+)
+
+export const editProfile = createAsyncThunk<UserType, ProfileEditMutation, {rejectValue: ValidationError}>(
+  'users/editProfile',
+  async (profileData, {rejectWithValue}) => {
+    try {
+      const formData = new FormData();
+
+      const keys = Object.keys(profileData) as (keyof ProfileEditMutation)[];
+
+      keys.forEach(key => {
+        const value = profileData[key];
+        if (value !== null) {
+          formData.append(key, value);
+        }
+      });
+
+      const editProfileResponse = await axiosApi.patch<UserType>('/users/edit', formData);
+      return editProfileResponse.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as ValidationError);
+      }
+
+      throw e;
+    }
+  }
+)
+
+export const logout = createAsyncThunk<void, void, {state: RootState}>(
+  'users/logout',
+  async (_, {dispatch, getState}) => {
+    try {
+      const user = getState().users.user;
+      await axiosApi.delete('/authorization/sessions', { headers: { Authorization: user?.token }});
+      dispatch(unsetUser());
+    } catch (e) {
       throw e;
     }
   }
