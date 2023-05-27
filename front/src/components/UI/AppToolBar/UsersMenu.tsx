@@ -48,7 +48,7 @@ const UsersMenu = () => {
 
   return (
     <Grid item>
-      <Box sx={{ display: 'flex' }} onMouseEnter={handleClick} color="inherit">
+      <Box sx={{ display: 'flex' }} onClick={handleClick} color="inherit">
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />

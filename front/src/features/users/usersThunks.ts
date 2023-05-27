@@ -49,7 +49,6 @@ export const editProfile = createAsyncThunk<UserType, ProfileEditMutation, {reje
   async (profileData, {rejectWithValue}) => {
     try {
       const formData = new FormData();
-
       const keys = Object.keys(profileData) as (keyof ProfileEditMutation)[];
 
       keys.forEach(key => {

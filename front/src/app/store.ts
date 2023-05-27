@@ -2,9 +2,11 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { usersReducer } from "@/features/users/usersSlice";
+import { locationsReducer } from "@/features/locations/locationsSlice";
 
 const rootReducer = combineReducers({
   users: usersReducer,
+  locations: locationsReducer,
 });
 
 const persistConfig = {
