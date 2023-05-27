@@ -21,16 +21,23 @@ export class LocationsService {
     return await this.locationRepository.findOne({ where: { id } });
   }
 
-  async createLocation(data: CreateLocationDto, user: User) {
+  async createLocation(
+    data: CreateLocationDto,
+    user: User,
+    images: Express.Multer.File[],
+  ) {
     try {
+      const coordinates = JSON.parse(data.coordinates);
+
       const newLocation: Partial<Location> = {
         user: user,
         title: data.title,
         address: data.address,
         coordinates: {
-          lat: data.coordinates.lat,
-          lon: data.coordinates.lon,
+          lat: coordinates.lat,
+          lon: coordinates.lng,
         },
+        images: images.map((image) => image.filename),
         description: data.description,
         workingHours: data.workingHours,
         contacts: data.contacts,

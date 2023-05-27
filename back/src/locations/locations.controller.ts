@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   Req,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -22,6 +23,8 @@ import { UserRequest } from '../auth/types';
 import { UpdateLocationDto } from './dto/updateLocation.dto';
 import { RoleGuard } from '../auth/role.guard';
 import { ApproveLocationDto } from './dto/approveLocation.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerImagesStorage } from './multer.imagesStorage';
 
 @Controller('locations')
 export class LocationsController {
@@ -32,12 +35,16 @@ export class LocationsController {
 
   @Post()
   @UseGuards(TokenAuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(
+    ClassSerializerInterceptor,
+    FilesInterceptor('images', 10, { storage: multerImagesStorage }),
+  )
   async createLocation(
     @Body() body: CreateLocationDto,
     @Req() req: UserRequest,
+    @UploadedFiles() images: Express.Multer.File[],
   ) {
-    return this.locationsService.createLocation(body, req.user);
+    return this.locationsService.createLocation(body, req.user, images);
   }
 
   @Get()

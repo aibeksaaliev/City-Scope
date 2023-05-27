@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsNotEmpty,
-  IsObject,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateLocationDto {
   @IsNotEmpty()
@@ -13,23 +7,13 @@ export class CreateLocationDto {
   @IsNotEmpty()
   address: string;
 
-  @IsObject()
-  @IsOptional()
-  coordinates: { lat: string; lon: string };
-
-  // @IsOptional()
-  // @IsString()
-  // logo: string;
+  @IsNotEmpty()
+  coordinates: string;
 
   @IsNotEmpty()
   description: string;
 
-  @IsArray()
-  @IsOptional()
-  images: string[];
-
-  @IsOptional()
-  @IsString()
+  @IsNotEmpty()
   workingHours: string;
 
   @IsNotEmpty()
