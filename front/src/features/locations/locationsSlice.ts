@@ -1,14 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createLocation, getAddressByCoordinates } from "@/features/locations/locationsThunks";
+import {
+  approveLocation,
+  createLocation,
+  fetchLocations,
+  fetchNonApprovedLocations,
+  getAddressByCoordinates
+} from "@/features/locations/locationsThunks";
 import { RootState } from "@/app/store";
-import { CoordinatesType } from "@/features/locations/types";
-import { ValidationError } from "@/features/users/types";
+import { CoordinatesType, LocationType } from "@/features/locations/types";
+import { GlobalError, ValidationError } from "@/features/users/types";
 
 interface LocationsState {
   address: string | null;
   currentCoordinates: CoordinatesType | null;
   createLocationLoading: boolean;
   createLocationError: ValidationError | null;
+  locations: LocationType[];
+  nonApprovedLocations: LocationType[];
+  selectedLocation: LocationType | null;
+  locationsLoading: boolean;
+  locationsError: GlobalError | null;
+  approveLoading: boolean;
+  approveError: ValidationError | null;
 }
 
 const initialState: LocationsState = {
@@ -16,6 +29,13 @@ const initialState: LocationsState = {
   currentCoordinates: null,
   createLocationLoading: false,
   createLocationError: null,
+  locations: [],
+  nonApprovedLocations: [],
+  selectedLocation: null,
+  locationsLoading: false,
+  locationsError: null,
+  approveLoading: false,
+  approveError: null,
 };
 
 export const locationsSlice = createSlice({
@@ -24,6 +44,9 @@ export const locationsSlice = createSlice({
   reducers: {
     setCoordinates: (state, {payload: data}) => {
       state.currentCoordinates = data;
+    },
+    selectLocation: (state, {payload: data}) => {
+      state.selectedLocation = data;
     }
   },
   extraReducers: (builder) => {
@@ -43,13 +66,47 @@ export const locationsSlice = createSlice({
       state.createLocationLoading = false;
       state.createLocationError = error || null;
     });
+
+    builder.addCase(fetchLocations.pending, (state) => {
+      state.locationsLoading = true;
+    }).addCase(fetchLocations.fulfilled, (state, { payload: data}) => {
+      state.locations = data;
+    }).addCase(fetchLocations.rejected, (state, {payload: error}) => {
+      state.locationsLoading = false;
+      state.locationsError = error || null;
+    });
+
+    builder.addCase(fetchNonApprovedLocations.pending, (state) => {
+      state.locationsLoading = true;
+    }).addCase(fetchNonApprovedLocations.fulfilled, (state, { payload: data}) => {
+      state.nonApprovedLocations = data;
+    }).addCase(fetchNonApprovedLocations.rejected, (state, {payload: error}) => {
+      state.locationsLoading = false;
+      state.locationsError = error || null;
+    });
+
+    builder.addCase(approveLocation.pending, (state) => {
+      state.approveLoading = true;
+    }).addCase(approveLocation.fulfilled, (state) => {
+      state.approveLoading = false;
+    }).addCase(approveLocation.rejected, (state, {payload: error}) => {
+      state.approveLoading = false;
+      state.approveError = error || null;
+    });
   }
 });
 
 export const locationsReducer = locationsSlice.reducer;
 
-export const {setCoordinates} = locationsSlice.actions;
+export const {setCoordinates, selectLocation} = locationsSlice.actions;
 export const selectAddress = (state: RootState) => state.locations.address;
 export const selectCoordinates = (state: RootState) => state.locations.currentCoordinates;
 export const selectCreateLocationLoading = (state: RootState) => state.locations.createLocationLoading;
 export const selectCreateLocationError = (state: RootState) => state.locations.createLocationError;
+export const selectLocations = (state: RootState) => state.locations.locations;
+export const selectNonApprovedLocations = (state: RootState) => state.locations.nonApprovedLocations;
+export const selectSelectedLocation = (state: RootState) => state.locations.selectedLocation;
+export const selectLocationsLoading = (state: RootState) => state.locations.locationsLoading;
+export const selectLocationsError = (state: RootState) => state.locations.locationsError;
+export const selectApproveLoading = (state: RootState) => state.locations.approveLoading;
+export const selectApproveError = (state: RootState) => state.locations.approveError;

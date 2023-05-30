@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { isAxiosError } from "axios";
-import { CoordinatesType, CreateLocationType } from "@/features/locations/types";
+import { ApproveLocationType, CoordinatesType, CreateLocationType, LocationType } from "@/features/locations/types";
 import { axiosApi } from "@/configs/axiosApi";
-import { ValidationError } from "@/features/users/types";
+import { GlobalError, ValidationError } from "@/features/users/types";
 
 export const getAddressByCoordinates = createAsyncThunk<string, CoordinatesType>(
   'locations/getAddress',
@@ -37,6 +37,55 @@ export const createLocation = createAsyncThunk<void, CreateLocationType, {reject
 
       const response = await axiosApi.post('/locations', formData);
       return response.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as ValidationError);
+      }
+
+      throw e;
+    }
+  }
+);
+
+export const fetchLocations = createAsyncThunk<LocationType[], void, {rejectValue: GlobalError}>(
+  'locations/fetchAll',
+  async (_, {rejectWithValue}) => {
+    try {
+      const locationsResponse = await axiosApi.get<LocationType[]>('/locations');
+      return locationsResponse.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+
+      throw e;
+    }
+
+  }
+);
+
+export const fetchNonApprovedLocations = createAsyncThunk<LocationType[], void, {rejectValue: GlobalError}>(
+  'locations/fetchNonApprovedLocations',
+  async (_, {rejectWithValue}) => {
+    try {
+      const nonApprovedLocationsResponse = await axiosApi.get('/locations/nonApprovedLocations');
+      return nonApprovedLocationsResponse.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+
+      throw e;
+    }
+  }
+);
+
+export const approveLocation = createAsyncThunk<void, {data: ApproveLocationType, id: number}, {rejectValue: ValidationError}>(
+  'locations/approveLocation',
+  async ({data, id}, {rejectWithValue}) => {
+    try {
+      const approveLocationResponse = await axiosApi.patch('/locations/approveLocation/' + id, data);
+      return approveLocationResponse.data;
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {
         return rejectWithValue(e.response.data as ValidationError);

@@ -7,6 +7,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useRouter } from "next/router";
 import { logout } from "@/features/users/usersThunks";
@@ -90,6 +91,14 @@ const UsersMenu = () => {
               <StarIcon/>
             </ListItemIcon>
             My feedbacks
+          </MenuItem>
+        </Box>
+        <Box sx={{borderBottom: "1px solid #333333", pb: 1, mt: 1}}>
+          <MenuItem onClick={() => router.push('/admin')}>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon/>
+            </ListItemIcon>
+            Admin Menu
           </MenuItem>
         </Box>
         <Box sx={{mt: 1}}>

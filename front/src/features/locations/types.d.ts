@@ -16,3 +16,25 @@ export interface CreateLocationType {
   workingHours: string;
   contacts: string;
 }
+
+export interface LocationType {
+  id: number;
+  address: string;
+  approvedAt: Date | null;
+  contacts: string;
+  coordinates: CoordinatesType;
+  createdAt: Date;
+  description: string;
+  favoritesCount: number;
+  images: string[] | null;
+  isApproved: boolean;
+  logo: string | null;
+  title: string;
+  updatedAt: Date;
+  workingHours: string;
+}
+
+export interface ApproveLocationType {
+  subCategoryId: string;
+  status: boolean;
+}

@@ -1,11 +1,11 @@
 import React from 'react';
-import { AppBar, Box, Grid, Toolbar, Typography } from '@mui/material';
 import '@fontsource/oswald';
+import { AppBar, Box, Grid, Toolbar, Typography } from '@mui/material';
 import AnonymousMenu from '@/components/UI/AppToolBar/AnonymousMenu';
 import UsersMenu from '@/components/UI/AppToolBar/UsersMenu';
 import { useAppSelector } from '@/app/hooks';
 import { selectUser } from '@/features/users/usersSlice';
-import SideMenuLayout from '@/components/Layouts/SideMenuLayout';
+import Link from "next/link";
 
 const AppToolBar = () => {
   const user = useAppSelector(selectUser);
@@ -30,16 +30,13 @@ const AppToolBar = () => {
                   textTransform: 'uppercase',
                 }}
               >
-                City Scope
+                <Link href="/">City Scope</Link>
               </Typography>
             </Grid>
             {user ? <UsersMenu /> : <AnonymousMenu />}
           </Grid>
         </Toolbar>
       </AppBar>
-      <Box>
-        <SideMenuLayout />
-      </Box>
     </Box>
   );
 };

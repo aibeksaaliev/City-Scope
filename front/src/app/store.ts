@@ -3,10 +3,12 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import { usersReducer } from "@/features/users/usersSlice";
 import { locationsReducer } from "@/features/locations/locationsSlice";
+import { categoriesReducer } from "@/features/categories/categoriesSlice";
 
 const rootReducer = combineReducers({
   users: usersReducer,
   locations: locationsReducer,
+  categories: categoriesReducer,
 });
 
 const persistConfig = {
