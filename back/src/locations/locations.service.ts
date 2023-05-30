@@ -37,7 +37,9 @@ export class LocationsService {
           lat: coordinates.lat,
           lon: coordinates.lng,
         },
-        images: images.map((image) => image.filename),
+        images: images.map(
+          (image) => `/uploads/locations/images/${image.filename}`,
+        ),
         description: data.description,
         workingHours: data.workingHours,
         contacts: data.contacts,
@@ -49,8 +51,12 @@ export class LocationsService {
     }
   }
 
-  async getAllLocations() {
-    return await this.locationRepository.find();
+  async getAllApprovedLocations() {
+    return await this.locationRepository.find({ where: { isApproved: true } });
+  }
+
+  async getAllNonApprovedLocations() {
+    return await this.locationRepository.find({ where: { isApproved: false } });
   }
 
   async gelLocationsBySubCategory(id: number) {

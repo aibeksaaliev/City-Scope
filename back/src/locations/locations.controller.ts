@@ -50,7 +50,14 @@ export class LocationsController {
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   async getAllLocations() {
-    return this.locationsService.getAllLocations();
+    return this.locationsService.getAllApprovedLocations();
+  }
+
+  @Get('nonApprovedLocations')
+  @UseGuards(TokenAuthGuard, RoleGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getAllNonApprovedLocations() {
+    return this.locationsService.getAllNonApprovedLocations();
   }
 
   @Get(':id')
