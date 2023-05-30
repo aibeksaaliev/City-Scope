@@ -7,6 +7,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { FixturesModule } from "./fixtures/fixtures.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { join } from 'path';
     LocationsModule,
     CategoriesModule,
     FeedbacksModule,
+    FixturesModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
