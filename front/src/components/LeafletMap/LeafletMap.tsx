@@ -30,7 +30,8 @@ const LeafletMap = () => {
     useMapEvents({
       click: (e: L.LeafletMouseEvent) => {
         const selectedCoordinates: CoordinatesType = {lat: e.latlng.lat.toString(), lng: e.latlng.lng.toString()};
-        dispatch(setCoordinates(selectedCoordinates))
+        console.log(selectedCoordinates);
+        dispatch(setCoordinates(selectedCoordinates));
         L.marker(e.latlng, { icon: customIcon }).addTo(mapRef.current!);
         dispatch(getAddressByCoordinates({lat: e.latlng.lat.toString(), lng: e.latlng.lng.toString()}))
       },

@@ -1,11 +1,10 @@
 import React from "react";
-import AuthLayout from "@/components/Layouts/AuthLayout";
 import { Button } from "@mui/material";
 import Link from "next/link";
 
 const Index = () => {
   return (
-    <AuthLayout>
+    <>
       <Link href="/auth/login" style={{width: "25%"}}>
         <Button
           component="div"
@@ -26,7 +25,7 @@ const Index = () => {
           Sign up
         </Button>
       </Link>
-    </AuthLayout>
+    </>
   );
 };
 
