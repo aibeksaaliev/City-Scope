@@ -1,6 +1,6 @@
 export interface CoordinatesType {
   lat: string;
-  lng: string;
+  lon: string;
 }
 
 export interface AddressType {

@@ -7,8 +7,8 @@ import { GlobalError, ValidationError } from "@/features/users/types";
 export const getAddressByCoordinates = createAsyncThunk<string, CoordinatesType>(
   'locations/getAddress',
   async (coordinates) => {
-    const {lat, lng} = coordinates;
-    const response = await axios.get(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lng}`);
+    const {lat, lon} = coordinates;
+    const response = await axios.get(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`);
     console.log(response.data.display_name);
     return response.data.display_name;
   }
