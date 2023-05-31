@@ -15,7 +15,7 @@ import { fetchLocations, fetchNonApprovedLocations } from "@/features/locations/
 import LocationPreviewCard from "@/components/Cards/LocationPreviewCard";
 import { Button } from "@mui/material";
 import CreateCategoriesForm from "@/components/Forms/LocationForms/CreateCategoriesForm";
-import SideMenuLayout from "@/components/Layouts/SideMenuLayout";
+import LocationsList from "@/components/Layouts/LocationsList";
 import { LocationType } from "@/features/locations/types";
 import LocationFullCard from "@/components/Cards/LocationFullCard";
 

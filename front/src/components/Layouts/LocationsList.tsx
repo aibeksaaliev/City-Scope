@@ -7,17 +7,19 @@ import { selectAddress, selectLocations } from "@/features/locations/locationsSl
 import AddressCard from "@/components/Cards/AddressCard";
 import { fetchLocations } from "@/features/locations/locationsThunks";
 import LocationPreviewCard from "@/components/Cards/LocationPreviewCard";
+import { LocationType } from "@/features/locations/types";
 
-const SideMenuLayout = ({ }) => {
+interface Props {
+  locations: LocationType[];
+}
+
+const LocationsList: React.FC<Props> = ({locations}) => {
   const dispatch = useAppDispatch();
   const address = useAppSelector(selectAddress);
-  const locations = useAppSelector(selectLocations);
 
   useEffect(() => {
     dispatch(fetchLocations());
   }, [dispatch]);
-
-  console.log(locations);
 
   return (
     <Drawer
@@ -28,7 +30,7 @@ const SideMenuLayout = ({ }) => {
         [`& .MuiDrawer-paper`]: { width: 350, boxSizing: 'border-box' },
       }}
     >
-      <Box sx={{ overflow: 'auto', paddingTop: "64px"}}>
+      <Box sx={{ overflow: 'auto', marginTop: "64px"}}>
         <Divider />
         {address ? <AddressCard address={address}/> : null}
         <Divider />
@@ -42,4 +44,4 @@ const SideMenuLayout = ({ }) => {
   );
 };
 
-export default SideMenuLayout;
+export default LocationsList;

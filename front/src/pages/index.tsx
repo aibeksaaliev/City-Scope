@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import SideMenuLayout from "@/components/Layouts/SideMenuLayout";
+import MainSideMenuLayout from "@/components/Layouts/MainSideMenuLayout";
 
 export default function Home() {
   return (
@@ -9,7 +9,9 @@ export default function Home() {
         <title>City Scope: Find Location In Your City</title>
         <meta name="description" content="City Scope: Find Location In Your City" />
       </Head>
-      <SideMenuLayout/>
+      {/*<LocationsList/>*/}
+      <MainSideMenuLayout/>
+
     </>
   );
 }

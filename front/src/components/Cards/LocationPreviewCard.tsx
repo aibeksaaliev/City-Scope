@@ -13,16 +13,19 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { LocationType } from "@/features/locations/types";
 import Divider from "@mui/material/Divider";
 import { Button } from "@mui/material";
+import { useAppSelector } from "@/app/hooks";
+import { selectUser } from "@/features/users/usersSlice";
 
 interface Props {
   location: LocationType;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const LocationPreviewCard: React.FC<Props> = ({location, onClick}) => {
+  const user = useAppSelector(selectUser);
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 350, mb: 1 }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500], fontSize: "10px" }} aria-label="recipe">
@@ -30,30 +33,27 @@ const LocationPreviewCard: React.FC<Props> = ({location, onClick}) => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
+          <IconButton aria-label="add to favorites">
+            <FavoriteIcon />
           </IconButton>
         }
         title={location.title}
-        subheader={location.address}
+        subheader={location.description}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          {location.description}
+          {location.address}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <Button
-          onClick={onClick}
-        >
-          Approve
-        </Button>
+
+        {user && user.role === "admin" ? (
+          <Button
+            onClick={onClick}
+          >
+            Approve
+          </Button>
+        ) : null}
       </CardActions>
       <Divider/>
     </Card>

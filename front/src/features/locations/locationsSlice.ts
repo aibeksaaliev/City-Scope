@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   approveLocation,
   createLocation,
-  fetchLocations,
+  fetchLocations, fetchLocationsBySubCategory,
   fetchNonApprovedLocations,
   getAddressByCoordinates
 } from "@/features/locations/locationsThunks";
@@ -17,6 +17,7 @@ interface LocationsState {
   createLocationError: ValidationError | null;
   locations: LocationType[];
   nonApprovedLocations: LocationType[];
+  locationsBySubCategory: LocationType[];
   selectedLocation: LocationType | null;
   locationsLoading: boolean;
   locationsError: GlobalError | null;
@@ -31,6 +32,7 @@ const initialState: LocationsState = {
   createLocationError: null,
   locations: [],
   nonApprovedLocations: [],
+  locationsBySubCategory: [],
   selectedLocation: null,
   locationsLoading: false,
   locationsError: null,
@@ -85,6 +87,15 @@ export const locationsSlice = createSlice({
       state.locationsError = error || null;
     });
 
+    builder.addCase(fetchLocationsBySubCategory.pending, (state) => {
+      state.locationsLoading = true;
+    }).addCase(fetchLocationsBySubCategory.fulfilled, (state, { payload: data}) => {
+      state.locationsBySubCategory = data;
+    }).addCase(fetchLocationsBySubCategory.rejected, (state, {payload: error}) => {
+      state.locationsLoading = false;
+      state.locationsError = error || null;
+    });
+
     builder.addCase(approveLocation.pending, (state) => {
       state.approveLoading = true;
     }).addCase(approveLocation.fulfilled, (state) => {
@@ -105,6 +116,7 @@ export const selectCreateLocationLoading = (state: RootState) => state.locations
 export const selectCreateLocationError = (state: RootState) => state.locations.createLocationError;
 export const selectLocations = (state: RootState) => state.locations.locations;
 export const selectNonApprovedLocations = (state: RootState) => state.locations.nonApprovedLocations;
+export const selectLocationsBySubCategory = (state: RootState) => state.locations.locationsBySubCategory;
 export const selectSelectedLocation = (state: RootState) => state.locations.selectedLocation;
 export const selectLocationsLoading = (state: RootState) => state.locations.locationsLoading;
 export const selectLocationsError = (state: RootState) => state.locations.locationsError;
