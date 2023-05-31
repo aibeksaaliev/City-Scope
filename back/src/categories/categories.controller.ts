@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +22,8 @@ import { RoleGuard } from '../auth/role.guard';
 import { UpdateMainCategoryDto } from './dto/updateMainCategory.dto';
 import { CreateSubCategoryDto } from './dto/createSubCategory.dto';
 import { UpdateSubCategoryDto } from './dto/updateSubCategory.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerCategoryImageStorage } from './multerCategoryImageStorage';
 
 @Controller('categories')
 export class CategoriesController {
@@ -31,9 +34,15 @@ export class CategoriesController {
 
   @Post('createMainCategory')
   @UseGuards(TokenAuthGuard, RoleGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
-  async createMainCategory(@Body() body: CreateMainCategoryDto) {
-    return this.categoriesService.createMainCategory(body);
+  @UseInterceptors(
+    ClassSerializerInterceptor,
+    FileInterceptor('image', { storage: multerCategoryImageStorage }),
+  )
+  async createMainCategory(
+    @Body() body: CreateMainCategoryDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    return this.categoriesService.createMainCategory(body, image);
   }
 
   @Post('createSubCategory')

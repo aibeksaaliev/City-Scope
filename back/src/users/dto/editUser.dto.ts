@@ -13,7 +13,6 @@ export class EditUserDto {
   @IsNotEmpty()
   phoneNumber: string;
 
-  @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email: string;
 }

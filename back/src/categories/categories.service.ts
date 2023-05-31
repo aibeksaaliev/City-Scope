@@ -17,8 +17,14 @@ export class CategoriesService {
     private subCategoryRepository: Repository<SubCategory>,
   ) {}
 
-  async createMainCategory(data: CreateMainCategoryDto) {
-    const newMainCategory = await this.mainCategoryRepository.create(data);
+  async createMainCategory(
+    data: CreateMainCategoryDto,
+    image: Express.Multer.File,
+  ) {
+    const newMainCategory = await this.mainCategoryRepository.create({
+      title: data.title,
+      image: `/uploads/categories/images/${image.filename}`,
+    });
     return await this.mainCategoryRepository.save(newMainCategory);
   }
 

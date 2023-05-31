@@ -59,14 +59,17 @@ export class FixturesService {
 
     const category1 = await this.mainCategoryRepository.create({
       title: 'Food & Beverage',
+      image: '/fixtures/food_ic.svg',
     });
 
     const category2 = await this.mainCategoryRepository.create({
       title: 'Accommodation',
+      image: '/fixtures/accommodation_ic.svg',
     });
 
     const category3 = await this.mainCategoryRepository.create({
       title: 'Beauty Services',
+      image: '/fixtures/beauty_ic.svg',
     });
 
     await this.mainCategoryRepository.save(category1);

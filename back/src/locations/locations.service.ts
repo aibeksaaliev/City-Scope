@@ -59,11 +59,11 @@ export class LocationsService {
     return await this.locationRepository.find({ where: { isApproved: false } });
   }
 
-  async gelLocationsBySubCategory(id: number) {
+  async gelLocationsBySubCategory(subCategoryId: number) {
     return this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.subCategory', 'subCategory')
-      .where('subCategory.id = :subCategoryId', { id })
+      .where('subCategory.id = :subCategoryId', { subCategoryId })
       .getMany();
   }
 
