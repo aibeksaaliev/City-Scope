@@ -7,8 +7,8 @@ import { GlobalError, ValidationError } from "@/features/users/types";
 export const getAddressByCoordinates = createAsyncThunk<string, CoordinatesType>(
   'locations/getAddress',
   async (coordinates) => {
-    const {lat, lon} = coordinates;
-    const response = await axios.get(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`);
+    const {lat, lng} = coordinates;
+    const response = await axios.get(`https://geocode.maps.co/reverse?lat=${lat}&lon=${lng}`);
     console.log(response.data.display_name);
     return response.data.display_name;
   }
@@ -22,6 +22,7 @@ export const createLocation = createAsyncThunk<void, CreateLocationType, {reject
 
       formData.append('title', location.title);
       formData.append('address', location.address);
+      console.log(location.coordinates);
       formData.append('coordinates', JSON.stringify(location.coordinates));
       formData.append('description', location.description);
       formData.append('workingHours', location.workingHours);
@@ -95,6 +96,22 @@ export const fetchNonApprovedLocations = createAsyncThunk<LocationType[], void, 
     }
   }
 );
+
+export const fetchLocationsByAddress = createAsyncThunk<LocationType[], string, {rejectValue: GlobalError}>(
+  'locations/fetchLocationsByAddress',
+  async (address, {rejectWithValue}) => {
+    try {
+      const addressLocationsResponse = await axiosApi.get(`/locations/byAddress/` + address);
+      return addressLocationsResponse.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+
+      throw e;
+    }
+  }
+)
 
 export const approveLocation = createAsyncThunk<void, {data: ApproveLocationType, id: number}, {rejectValue: ValidationError}>(
   'locations/approveLocation',

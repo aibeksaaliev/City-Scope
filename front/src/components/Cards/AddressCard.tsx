@@ -18,19 +18,20 @@ const AddressCard: React.FC<Props> = ({address}) => {
   };
 
   return (
-    <Box sx={{p: 1}}>
+    <Box sx={{m: 1, p: 1, border: "1px solid #333333", borderRadius: "5px"}}>
       <Grid container>
-        <Grid item sx={{mb: 3}}>
+        <Grid item sx={{mb: 2}}>
           <Typography
             variant="h6"
-            sx={{fontSize: "18px"}}
+            sx={{fontSize: "15px"}}
           >
             {address}
           </Typography>
         </Grid>
-        <Grid item sx={{m: "auto"}}>
+        <Grid item sx={{width: "100%"}}>
           <Button
             variant="contained"
+            fullWidth
             sx={{backgroundColor: "#333333", color: "#FFFFFF"}}
             onClick={addOrganization}
           >

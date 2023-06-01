@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
@@ -6,22 +6,38 @@ import "leaflet-defaulticon-compatibility";
 import L, { LatLngExpression } from "leaflet";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { getAddressByCoordinates } from "@/features/locations/locationsThunks";
-import { selectLocationsBySubCategory, setCoordinates } from "@/features/locations/locationsSlice";
-import { CoordinatesType } from "@/features/locations/types";
+import {
+  selectClickedPlace,
+  selectLocation,
+  selectLocationsBySubCategory,
+  setClickedPlace,
+  setCoordinates
+} from "@/features/locations/locationsSlice";
+import { CoordinatesType, LocationType } from "@/features/locations/types";
+import LocationMarker from "@/components/LeafletMap/LocationMarker";
+import { useRouter } from "next/router";
 
 const LeafletMap = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const center: LatLngExpression = { lat: 42.8746, lng: 74.5698 };
   const selectedLocations = useAppSelector(selectLocationsBySubCategory);
-  const [clickedLocation, setClickedLocation] = useState<LatLngExpression | null>(null);
+  const clickedPlace = useAppSelector(selectClickedPlace);
+
+  const handleLocationClick = (location: LocationType) => {
+    dispatch(selectLocation(location));
+  };
 
   const MapEvents = () => {
     useMapEvents({
       click: (e: L.LeafletMouseEvent) => {
-        const selectedCoordinates: CoordinatesType = { lat: e.latlng.lat.toString(), lon: e.latlng.lng.toString() };
+        const selectedCoordinates: CoordinatesType = { lat: e.latlng.lat.toString(), lng: e.latlng.lng.toString() };
         dispatch(setCoordinates(selectedCoordinates));
-        setClickedLocation({ lat: e.latlng.lat, lng: e.latlng.lng });
-        dispatch(getAddressByCoordinates({ lat: e.latlng.lat.toString(), lon: e.latlng.lng.toString() }));
+        dispatch(setClickedPlace({lat: e.latlng.lat, lng: e.latlng.lng}));
+        dispatch(getAddressByCoordinates({ lat: e.latlng.lat.toString(), lng: e.latlng.lng.toString() }));
+        const coordinatesQueryParam = `lat=${e.latlng.lat}&lng=${e.latlng.lng}`;
+        const url = `/geo?coordinates=${encodeURIComponent(coordinatesQueryParam)}`;
+        router.push(url);
       }
     });
 
@@ -34,17 +50,22 @@ const LeafletMap = () => {
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MapEvents />
 
-        {clickedLocation && (
-          <Marker position={clickedLocation} />
+        {clickedPlace && (
+          <Marker position={clickedPlace} />
         )}
 
         {selectedLocations ? (
           selectedLocations.map(location => {
             const coordinates: LatLngExpression = {
               lat: parseFloat(location.coordinates.lat),
-              lng: parseFloat(location.coordinates.lon)
+              lng: parseFloat(location.coordinates.lng)
             }
-            return <Marker position={coordinates} key={location.id}/>
+            return <LocationMarker
+              coordinates={coordinates}
+              key={location.id}
+              title={location.title}
+              onClick={() => handleLocationClick(location)}
+            />
           })
         ) : null}
 

@@ -114,7 +114,7 @@ const LocationFullCard = () => {
               </Typography>
             </Box>
             <Divider/>
-            <ApproveLocationForm id={selectedLocation?.id!}/>
+            {/*<ApproveLocationForm id={selectedLocation?.id!}/>*/}
           </CardContent>
           <CardActions sx={{width: "100%"}}>
           </CardActions>

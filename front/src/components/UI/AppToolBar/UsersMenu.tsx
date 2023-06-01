@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { Avatar, Box, Grid, ListItemIcon, Menu, MenuItem, IconButton, Badge, Dialog } from "@mui/material";
+import { Avatar, Badge, Box, Grid, IconButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import StarIcon from "@mui/icons-material/Star";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import MailIcon from "@mui/icons-material/Mail";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useRouter } from "next/router";
 import { logout } from "@/features/users/usersThunks";
 import EditModalForm from "@/components/Forms/AuthForms/EditModalForm";
-import Link from "next/link";
 import { selectUser } from "@/features/users/usersSlice";
 import { apiURL } from "@/configs/constants";
+import { selectLocation } from "@/features/locations/locationsSlice";
 
 const UsersMenu = () => {
   const dispatch = useAppDispatch();
@@ -22,8 +22,6 @@ const UsersMenu = () => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const avatar = user ? apiURL + user.avatar : "";
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -35,6 +33,11 @@ const UsersMenu = () => {
   const handleLogout = async () => {
     await dispatch(logout());
     await router.push('/');
+  };
+
+  const openAdminMenu = async () => {
+    await router.push('/admin');
+    dispatch(selectLocation(null));
   };
 
   const handleEditProfile = () => {
@@ -93,14 +96,16 @@ const UsersMenu = () => {
             My feedbacks
           </MenuItem>
         </Box>
-        <Box sx={{borderBottom: "1px solid #333333", pb: 1, mt: 1}}>
-          <MenuItem onClick={() => router.push('/admin')}>
-            <ListItemIcon>
-              <AdminPanelSettingsIcon/>
-            </ListItemIcon>
-            Admin Menu
-          </MenuItem>
-        </Box>
+        {user && user.role === "admin" ? (
+            <Box sx={{borderBottom: "1px solid #333333", pb: 1, mt: 1}}>
+              <MenuItem onClick={openAdminMenu}>
+                <ListItemIcon>
+                  <AdminPanelSettingsIcon/>
+                </ListItemIcon>
+                Admin Menu
+              </MenuItem>
+            </Box>
+        ) : null}
         <Box sx={{mt: 1}}>
           <MenuItem onClick={handleEditProfile}>
             <ListItemIcon>

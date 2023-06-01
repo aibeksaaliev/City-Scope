@@ -8,8 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { LocationType } from "@/features/locations/types";
 import Divider from "@mui/material/Divider";
 import { Button } from "@mui/material";
@@ -25,7 +23,7 @@ const LocationPreviewCard: React.FC<Props> = ({location, onClick}) => {
   const user = useAppSelector(selectUser);
 
   return (
-    <Card sx={{ maxWidth: 350, mb: 1 }}>
+    <Card sx={{ maxWidth: 350, mb: 1 }} onClick={onClick}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500], fontSize: "10px" }} aria-label="recipe">
