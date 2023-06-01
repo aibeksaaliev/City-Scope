@@ -35,7 +35,7 @@ export class LocationsService {
         address: data.address,
         coordinates: {
           lat: coordinates.lat,
-          lon: coordinates.lng,
+          lng: coordinates.lng,
         },
         images: images.map(
           (image) => `/uploads/locations/images/${image.filename}`,
@@ -65,6 +65,10 @@ export class LocationsService {
       .leftJoinAndSelect('location.subCategory', 'subCategory')
       .where('subCategory.id = :subCategoryId', { subCategoryId })
       .getMany();
+  }
+
+  async getLocationsByAddress(address: string) {
+    return this.locationRepository.find({ where: { address } });
   }
 
   async updateLocation(id: number, data: UpdateLocationDto, user: User) {

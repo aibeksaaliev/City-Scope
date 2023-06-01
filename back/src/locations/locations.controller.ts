@@ -6,12 +6,12 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post, Query,
   Req,
   UploadedFiles,
   UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+  UseInterceptors
+} from "@nestjs/common";
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/createLocation.dto';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
@@ -69,6 +69,12 @@ export class LocationsController {
   @UseInterceptors(ClassSerializerInterceptor)
   async getLocationsBySubCategory(@Param('id') id: number) {
     return this.locationsService.gelLocationsBySubCategory(id);
+  }
+
+  @Get('byAddress/:address')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getLocationsByAddress(@Param('address') address: string) {
+    return this.locationsService.getLocationsByAddress(address);
   }
 
   @Patch(':id')

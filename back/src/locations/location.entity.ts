@@ -32,7 +32,7 @@ export class Location {
   address: string;
 
   @Column({ type: 'json' })
-  coordinates: { lat: string; lon: string };
+  coordinates: { lat: string; lng: string };
 
   @Column({ nullable: true })
   logo: string;
