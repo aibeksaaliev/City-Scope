@@ -52,7 +52,10 @@ export class LocationsService {
   }
 
   async getAllApprovedLocations() {
-    return await this.locationRepository.find({ where: { isApproved: true } });
+    return await this.locationRepository.find({
+      where: { isApproved: true },
+      relations: ['feedbacks'],
+    });
   }
 
   async getAllNonApprovedLocations() {
@@ -63,12 +66,16 @@ export class LocationsService {
     return this.locationRepository
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.subCategory', 'subCategory')
+      .leftJoinAndSelect('location.feedbacks', 'feedback')
       .where('subCategory.id = :subCategoryId', { subCategoryId })
       .getMany();
   }
 
   async getLocationsByAddress(address: string) {
-    return this.locationRepository.find({ where: { address } });
+    return this.locationRepository.find({
+      where: { address },
+      relations: ['feedbacks'],
+    });
   }
 
   async updateLocation(id: number, data: UpdateLocationDto, user: User) {
