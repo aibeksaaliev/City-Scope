@@ -9,29 +9,37 @@ import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import { red } from "@mui/material/colors";
 import IconButton from "@mui/material/IconButton";
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/scrollbar';
-import 'swiper/swiper-bundle.css';
-import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { A11y, Navigation, Pagination, Scrollbar } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/scrollbar";
+import "swiper/swiper-bundle.css";
 import { apiURL } from "@/configs/constants";
 import CardActions from "@mui/material/CardActions";
-import ApproveLocationForm from "@/components/Forms/LocationForms/ApproveLocationForm";
+import { addLocationToFavorites } from "@/features/users/usersThunks";
+import { selectUser } from "@/features/users/usersSlice";
 
 const LocationFullCard = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const selectedLocation = useAppSelector(selectSelectedLocation);
+
+  const favoriteStatus = user && user.favoriteLocations.some((location) => location.id === selectedLocation?.id);
 
   const closeFullCard = () => {
     dispatch(selectLocation(null));
+  };
+
+  const addToFavorites = (locationID: number) => {
+    dispatch(addLocationToFavorites(locationID));
   };
 
   return (
@@ -59,8 +67,8 @@ const LocationFullCard = () => {
               </Avatar>
             }
             action={
-              <IconButton aria-label="settings">
-                <MoreVertIcon />
+              <IconButton onClick={() => addToFavorites(selectedLocation?.id!)}>
+                {favoriteStatus ? <BookmarkIcon/> : <BookmarkBorderIcon/>}
               </IconButton>
             }
             title={selectedLocation?.title}

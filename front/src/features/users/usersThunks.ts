@@ -11,6 +11,7 @@ import {
 import { isAxiosError } from "axios";
 import { RootState } from "@/app/store";
 import { unsetUser } from "@/features/users/usersSlice";
+import { LocationType } from "@/features/locations/types";
 
 export const register = createAsyncThunk<UserType, RegisterMutation, {rejectValue: ValidationError}>(
   'users/register',
@@ -34,6 +35,22 @@ export const login = createAsyncThunk<UserType, LoginMutation, {rejectValue: Glo
     try {
       const loginResponse = await axiosApi.post<UserType>('/authorization/sessions', loginData);
       return loginResponse.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && (e.response.status === 400 || e.response.status === 401)) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+
+      throw e;
+    }
+  }
+)
+
+export const addLocationToFavorites = createAsyncThunk<LocationType[], number, {rejectValue: GlobalError}>(
+  'users/addToFavorites',
+  async (locationID, {rejectWithValue}) => {
+    try {
+      const favoritesResponse = await axiosApi.post(`/users/addToFavorites/${locationID}`);
+      return favoritesResponse.data;
     } catch (e) {
       if (isAxiosError(e) && e.response && (e.response.status === 400 || e.response.status === 401)) {
         return rejectWithValue(e.response.data as GlobalError);

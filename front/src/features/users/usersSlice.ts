@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { editProfile, login, register } from "@/features/users/usersThunks";
+import { addLocationToFavorites, editProfile, login, register } from "@/features/users/usersThunks";
 import { GlobalError, UserType, ValidationError } from "@/features/users/types";
 import { RootState } from "@/app/store";
 
@@ -61,6 +61,19 @@ export const usersSlice = createSlice({
       state.updateLoading = false;
       state.updateError = null;
     }).addCase(editProfile.rejected, (state, {payload: error}) => {
+      state.updateLoading = false;
+      state.updateError = error || null;
+    });
+
+    builder.addCase(addLocationToFavorites.pending, (state) => {
+      state.updateLoading = true;
+    }).addCase(addLocationToFavorites.fulfilled, (state, {payload: data}) => {
+      if (state.user) {
+        state.user.favoriteLocations = data;
+      }
+      state.updateLoading = false;
+      state.updateError = null;
+    }).addCase(addLocationToFavorites.rejected, (state, {payload: error}) => {
       state.updateLoading = false;
       state.updateError = error || null;
     });

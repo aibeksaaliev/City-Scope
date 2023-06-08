@@ -4,10 +4,8 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { LocationType } from "@/features/locations/types";
 import Divider from "@mui/material/Divider";
 import { Button } from "@mui/material";
@@ -30,13 +28,9 @@ const LocationPreviewCard: React.FC<Props> = ({location, onClick}) => {
             LOGO
           </Avatar>
         }
-        action={
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-        }
         title={location.title}
         subheader={location.description}
+        onClick={(e) => e.stopPropagation()}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">

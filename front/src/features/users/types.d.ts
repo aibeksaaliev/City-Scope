@@ -1,3 +1,5 @@
+import { LocationType } from "@/features/locations/types";
+
 export interface RegisterMutation {
   email: string;
   password: string;
@@ -31,6 +33,7 @@ export interface UserType {
   registeredAt: Date;
   updatedAt: Date;
   lastLogin: Date;
+  favoriteLocations: LocationType[];
 }
 
 export interface ValidationError {
