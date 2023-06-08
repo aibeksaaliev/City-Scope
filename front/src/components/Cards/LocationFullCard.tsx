@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -26,6 +26,7 @@ import { apiURL } from "@/configs/constants";
 import CardActions from "@mui/material/CardActions";
 import { addLocationToFavorites } from "@/features/users/usersThunks";
 import { selectUser } from "@/features/users/usersSlice";
+import CreateFeedbackForm from "@/components/Forms/LocationForms/CreateFeedbackForm";
 
 const LocationFullCard = () => {
   const dispatch = useAppDispatch();
@@ -52,13 +53,13 @@ const LocationFullCard = () => {
         [`& .MuiDrawer-paper`]: { width: 350, boxSizing: "border-box" }
       }}
     >
-      <Box sx={{ overflow: 'auto', paddingTop: "64px"}}>
+      <Box sx={{ overflow: "auto", paddingTop: "64px" }}>
         <Button
           onClick={closeFullCard}
         >
           Close
         </Button>
-        <Divider/>
+        <Divider />
         <Card>
           <CardHeader
             avatar={
@@ -68,14 +69,14 @@ const LocationFullCard = () => {
             }
             action={
               <IconButton onClick={() => addToFavorites(selectedLocation?.id!)}>
-                {favoriteStatus ? <BookmarkIcon/> : <BookmarkBorderIcon/>}
+                {favoriteStatus ? <BookmarkIcon /> : <BookmarkBorderIcon />}
               </IconButton>
             }
             title={selectedLocation?.title}
             subheader={selectedLocation?.description}
           />
           <CardContent>
-            <Box sx={{display: "flex"}}>
+            <Box sx={{ display: "flex" }}>
               <IconButton size="small" sx={{ marginRight: 1 }}>
                 <LocationOnIcon />
               </IconButton>
@@ -83,7 +84,7 @@ const LocationFullCard = () => {
                 {selectedLocation?.address}
               </Typography>
             </Box>
-            <Box sx={{mt: 2, mb: 2}}>
+            <Box sx={{ mt: 2, mb: 2 }}>
               <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={50}
@@ -97,39 +98,52 @@ const LocationFullCard = () => {
                       height="194"
                       image={apiURL + img}
                       alt="Paella dish"
-                      sx={{borderRadius: "5px"}}
+                      sx={{ borderRadius: "5px" }}
                     />
-                  </SwiperSlide>
+                  </SwiperSlide>;
                 })}
               </Swiper>
             </Box>
-            <Divider/>
-            <Box sx={{display: "flex", alignItems: "center"}}>
+            <Divider />
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <IconButton size="small" sx={{ marginRight: 1 }}>
-                <ScheduleIcon/>
+                <ScheduleIcon />
               </IconButton>
               <Typography variant="body2" color="text.secondary">
                 {selectedLocation?.workingHours}
               </Typography>
             </Box>
-            <Divider/>
-            <Box sx={{display: "flex", alignItems: "center"}}>
+            <Divider />
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <IconButton size="small" sx={{ marginRight: 1 }}>
-                <LocalPhoneIcon/>
+                <LocalPhoneIcon />
               </IconButton>
               <Typography variant="body2" color="text.secondary">
                 {selectedLocation?.contacts}
               </Typography>
             </Box>
-            <Divider/>
+            <Divider />
+            <Box>
+              <Box sx={{ background: "#333333", borderRadius: "10px", color: "#FFFFFF", p: 0.5, textAlign: "center" }}>
+                <Typography sx={{ fontSize: "15px", textTransform: "uppercase" }}>Reviews</Typography>
+              </Box>
+            </Box>
             {/*<ApproveLocationForm id={selectedLocation?.id!}/>*/}
           </CardContent>
-          <CardActions sx={{width: "100%"}}>
+          <CardActions sx={{ width: "100%" }}>
           </CardActions>
         </Card>
       </Box>
+      <Box sx={{ position: "sticky", top: "100%" }}>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ backgroundColor: "#333333", color: "#FFFFFF" }}
+        >Leave a review</Button>
+        {/*<CreateFeedbackForm />*/}
+      </Box>
     </Drawer>
-);
+  );
 };
 
 export default LocationFullCard;
