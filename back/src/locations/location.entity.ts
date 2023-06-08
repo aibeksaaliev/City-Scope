@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -68,6 +69,10 @@ export class Location {
 
   @OneToMany(() => Feedback, (feedback) => feedback.location)
   feedbacks: Feedback[];
+
+  @Exclude()
+  @ManyToMany(() => User, (user) => user.favoriteLocations)
+  users: User[];
 
   @Column({ default: 0 })
   favoritesCount: number;

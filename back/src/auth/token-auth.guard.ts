@@ -22,6 +22,7 @@ export class TokenAuthGuard implements CanActivate {
       where: {
         token,
       },
+      relations: ['favoriteLocations'],
     });
 
     if (!user) {

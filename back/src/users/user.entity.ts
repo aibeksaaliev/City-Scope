@@ -73,7 +73,8 @@ export class User {
   @OneToMany(() => Feedback, (feedback) => feedback.user)
   feedbacks: Feedback[];
 
-  @ManyToMany(() => Location)
+  @Exclude()
+  @ManyToMany(() => Location, (location) => location.users, { cascade: true })
   @JoinTable()
   favoriteLocations: Location[];
 

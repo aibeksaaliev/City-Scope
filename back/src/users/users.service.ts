@@ -23,7 +23,10 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    return await this.userRepository.findOne({ where: { email } });
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: ['favoriteLocations'],
+    });
   }
 
   async save(user: User) {
@@ -98,19 +101,27 @@ export class UsersService {
   async addLocationToFavorites(id: number, user: User) {
     try {
       const location = await this.locationsRepository.findOne({
-        where: { id },
+        where: { id: id },
+        relations: ['users'],
       });
 
       if (location) {
-        user.favoriteLocations = user.favoriteLocations || [];
-        user.favoriteLocations.push(location);
-        location.favoritesCount++;
+        const existingUserIndex = location.users.findIndex(
+          (existingUser) => existingUser.id === user.id,
+        );
 
-        await this.userRepository.save(user);
-        await this.locationsRepository.save(location);
-
-        return { message: 'Added successfully to favorites' };
+        if (existingUserIndex !== -1) {
+          user.favoriteLocations.splice(existingUserIndex, 1);
+          location.favoritesCount--;
+        } else {
+          user.favoriteLocations.push(location);
+          location.favoritesCount++;
+        }
       }
+
+      await this.locationsRepository.save(location);
+      await this.userRepository.save(user);
+      return user.favoriteLocations;
     } catch (error) {
       throw new Error('');
     }
