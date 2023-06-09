@@ -25,7 +25,7 @@ export class UsersService {
   async findByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      relations: ['favoriteLocations'],
+      relations: ['favoriteLocations', 'locations'],
     });
   }
 
