@@ -1,18 +1,16 @@
 import React, { useRef, useState } from "react";
-import { styled } from "@mui/material/styles";
-import { Avatar, Badge, Button, Grid, IconButton, TextField } from "@mui/material";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { useAppSelector } from "@/app/hooks";
-import { selectUser } from "@/features/users/usersSlice";
-import { apiURL } from "@/configs/constants";
+import { Box, Button, Grid, IconButton, TextField } from "@mui/material";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import InputImageCard from "@/components/Cards/InputImageCard";
 
 interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onDelete: (index: number) => void;
   name: string;
   label: string;
 }
 
-const LocationImagesInput: React.FC<Props> = ({ onChange, name, label }) => {
+const LocationImagesInput: React.FC<Props> = ({ onChange, onDelete, name, label }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [filenames, setFilenames] = useState<string[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -27,6 +25,20 @@ const LocationImagesInput: React.FC<Props> = ({ onChange, name, label }) => {
       setSelectedImages([]);
     }
     onChange(e);
+  };
+
+  const deleteImage = (index: number) => {
+    setSelectedImages((prevState) => {
+      const updatedImages = [...prevState];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
+    setFilenames((prevState) => {
+      const updatedFilenames = [...prevState];
+      updatedFilenames.splice(index, 1);
+      return updatedFilenames;
+    });
+    onDelete(index);
   };
 
   const activateInput = () => {
@@ -44,7 +56,7 @@ const LocationImagesInput: React.FC<Props> = ({ onChange, name, label }) => {
         onChange={onFileChange}
         ref={inputRef}
       />
-      <Grid container direction="row" spacing={2} alignItems="center">
+      <Grid container direction="row" spacing={2} alignItems="center" sx={{width: "552px"}}>
         <Grid item xs>
           <TextField
             disabled
@@ -53,16 +65,20 @@ const LocationImagesInput: React.FC<Props> = ({ onChange, name, label }) => {
             sx={{ display: "none" }}
             onClick={activateInput}
           />
-          <Grid container direction="row" alignItems="center">
+          <Grid container direction="row" alignItems="center" sx={{
+            overflowX: "scroll",
+            flexWrap: "nowrap",
+            maxWidth: "552px",
+          }}>
             {selectedImages.map((image, i) => {
-              return <Grid key={i} item sx={{border: "1px solid red"}}>
-                <img style={{width: "50px"}} src={image instanceof File ? URL.createObjectURL(image) : ""} alt="Test" />
-              </Grid>
+              return <InputImageCard image={image} key={i} onDelete={() => deleteImage(i)}/>
             })}
           </Grid>
-          <Button onClick={activateInput}>
-            Add
-          </Button>
+          <Box sx={{display: "flex", justifyContent: "center", m: 1}}>
+            <IconButton onClick={activateInput}>
+              <AddAPhotoIcon/>
+            </IconButton>
+          </Box>
         </Grid>
       </Grid>
     </>

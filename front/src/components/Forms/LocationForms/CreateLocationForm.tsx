@@ -11,6 +11,7 @@ import {
 } from "@/features/locations/locationsSlice";
 import LocationImagesInput from "@/components/UI/FileInput/LocationImagesInput";
 import { createLocation } from "@/features/locations/locationsThunks";
+import { useRouter } from "next/router";
 
 interface Props {
   isOpen: boolean;
@@ -19,11 +20,12 @@ interface Props {
 
 const CreateLocationForm: React.FC<Props> = ({isOpen, onClose}) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const currentCoordinates = useAppSelector(selectCoordinates);
   const currentAddress = useAppSelector(selectAddress);
   const loading = useAppSelector(selectCreateLocationLoading);
   const error = useAppSelector(selectCreateLocationError);
-  const [state, setState] = useState<CreateLocationType>({
+  const initialState: CreateLocationType = {
     title: "",
     address: currentAddress!,
     coordinates: currentCoordinates,
@@ -31,7 +33,8 @@ const CreateLocationForm: React.FC<Props> = ({isOpen, onClose}) => {
     images: [],
     workingHours: "",
     contacts: ""
-  });
+  }
+  const [state, setState] = useState<CreateLocationType>(initialState);
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -47,10 +50,23 @@ const CreateLocationForm: React.FC<Props> = ({isOpen, onClose}) => {
     }));
   };
 
+  const deleteImage = (index: number) => {
+    setState((prev) => {
+      const updatedImages = [...prev.images];
+      updatedImages.splice(index, 1);
+      return {
+        ...prev,
+        images: updatedImages,
+      };
+    });
+  };
+
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(createLocation(state)).unwrap();
+    setState(initialState);
     onClose();
+    await router.push('/');
   };
 
   const getFieldError = (fieldName: string) => {
@@ -70,7 +86,7 @@ const CreateLocationForm: React.FC<Props> = ({isOpen, onClose}) => {
         <form>
           <Grid container>
             <Grid item>
-              <LocationImagesInput onChange={fileInputHandler} name="images" label="Images"/>
+              <LocationImagesInput onChange={fileInputHandler} onDelete={deleteImage} name="images" label="Images"/>
             </Grid>
           </Grid>
           <TextField

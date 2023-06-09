@@ -11,6 +11,7 @@ import { red } from "@mui/material/colors";
 import IconButton from "@mui/material/IconButton";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CardContent from "@mui/material/CardContent";
@@ -77,9 +78,11 @@ const LocationFullCard: React.FC<Props> = ({id}) => {
     >
       <Box sx={{ overflow: "auto", paddingTop: "64px" }}>
         <Button
+          fullWidth
+          variant="contained"
           onClick={closeFullCard}
         >
-          Close
+          <ArrowBackIcon/>
         </Button>
         <Divider />
         <Card>
