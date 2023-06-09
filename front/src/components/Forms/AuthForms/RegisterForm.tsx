@@ -8,8 +8,9 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useRouter } from "next/router";
 import { selectRegisterError, selectRegisterLoading } from "@/features/users/usersSlice";
 import { RegisterMutation } from "@/features/users/types";
-import { register } from "@/features/users/usersThunks";
+import { googleLogin, register } from "@/features/users/usersThunks";
 import Link from "next/link";
+import { useGoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const RegisterForm = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +42,13 @@ const RegisterForm = () => {
     }
   };
 
+  const googleLoginHandler = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      await dispatch(googleLogin(tokenResponse.access_token)).unwrap();
+      await router.push('/');
+    },
+  });
+
   return (
     <Box component="form" sx={{width: '50%'}} onSubmit={submitForm}>
       <Box sx={{
@@ -50,7 +58,7 @@ const RegisterForm = () => {
         margin: '0 auto',
         width: '50%'
       }}>
-        <IconButton sx={{backgroundColor: '#FFFFFF'}}><GoogleIcon/></IconButton>
+        <IconButton onClick={() => googleLoginHandler()} sx={{backgroundColor: '#FFFFFF'}}><GoogleIcon/></IconButton>
         <IconButton sx={{backgroundColor: '#FFFFFF'}}><FacebookIcon/></IconButton>
         <IconButton sx={{backgroundColor: '#FFFFFF'}}><AppleIcon/></IconButton>
       </Box>

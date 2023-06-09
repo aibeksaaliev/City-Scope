@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addLocationToFavorites, editProfile, login, register } from "@/features/users/usersThunks";
+import { addLocationToFavorites, editProfile, googleLogin, login, register } from "@/features/users/usersThunks";
 import { GlobalError, UserType, ValidationError } from "@/features/users/types";
 import { RootState } from "@/app/store";
 
@@ -39,6 +39,17 @@ export const usersSlice = createSlice({
       state.registerLoading = false;
       state.registerError = null;
     }).addCase(register.rejected, (state, {payload: error}) => {
+      state.registerLoading = false;
+      state.registerError = error || null;
+    });
+
+    builder.addCase(googleLogin.pending, (state) => {
+      state.registerLoading = true;
+    }).addCase(googleLogin.fulfilled, (state, {payload: data}) => {
+      state.user = data;
+      state.registerLoading = false;
+      state.registerError = null;
+    }).addCase(googleLogin.rejected, (state, {payload: error}) => {
       state.registerLoading = false;
       state.registerError = error || null;
     });

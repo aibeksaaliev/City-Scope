@@ -25,6 +25,12 @@ export class AuthController {
     return this.authService.register(body);
   }
 
+  @Post('viaGoogle')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async registerUserWithGoogle(@Body() body: { credential: string }) {
+    return this.authService.registerUserWithGoogle(body.credential);
+  }
+
   @Post('sessions')
   @UseGuards(AuthGuard('local'))
   @UseInterceptors(ClassSerializerInterceptor)

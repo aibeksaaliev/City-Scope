@@ -27,7 +27,22 @@ export const register = createAsyncThunk<UserType, RegisterMutation, {rejectValu
       throw e;
     }
   }
-)
+);
+
+export const googleLogin = createAsyncThunk<UserType, string, { rejectValue: GlobalError }>(
+  'users/googleLogin',
+  async (credential, { rejectWithValue }) => {
+    try {
+      const response = await axiosApi.post('/authorization/viaGoogle', { credential });
+      return response.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+      throw e;
+    }
+  },
+);
 
 export const login = createAsyncThunk<UserType, LoginMutation, {rejectValue: GlobalError}>(
   'users/login',

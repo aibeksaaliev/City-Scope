@@ -7,9 +7,10 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useRouter } from "next/router";
 import { selectLoginError, selectLoginLoading } from "@/features/users/usersSlice";
 import { LoginMutation } from "@/features/users/types";
-import { login } from "@/features/users/usersThunks";
+import { googleLogin, login } from "@/features/users/usersThunks";
 import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +33,13 @@ const LoginForm = () => {
     await router.push('/');
   };
 
+  const googleLoginHandler = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      await dispatch(googleLogin(tokenResponse.access_token)).unwrap();
+      await router.push('/');
+    },
+  });
+
   return (
     <Box component="form" sx={{width: '50%'}} onSubmit={submitForm}>
       <Box sx={{
@@ -41,7 +49,7 @@ const LoginForm = () => {
         margin: '0 auto',
         width: '50%'
       }}>
-        <IconButton sx={{backgroundColor: '#FFFFFF'}}><GoogleIcon/></IconButton>
+        <IconButton onClick={() => googleLoginHandler()} sx={{backgroundColor: '#FFFFFF'}}><GoogleIcon/></IconButton>
         <IconButton sx={{backgroundColor: '#FFFFFF'}}><FacebookIcon/></IconButton>
         <IconButton sx={{backgroundColor: '#FFFFFF'}}><AppleIcon/></IconButton>
       </Box>

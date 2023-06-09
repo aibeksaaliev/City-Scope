@@ -19,7 +19,11 @@ export class UsersService {
   async create(body: UserCreateBody) {
     const user = this.userRepository.create(body);
     await user.generateToken();
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+    return this.userRepository.findOne({
+      where: { id: user.id },
+      relations: ['favoriteLocations', 'locations'],
+    });
   }
 
   async findByEmail(email: string) {

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { createFeedback } from "@/features/feedacks/FeedbacksThunks";
 import { selectSelectedLocation } from "@/features/locations/locationsSlice";
 import { fetchLocationById } from "@/features/locations/locationsThunks";
+import { router } from "next/client";
 
 interface Props {
   isModalOpen: boolean;
@@ -19,12 +20,16 @@ const CreateFeedbackForm: React.FC<Props> = ({isModalOpen, closeModal}) => {
   const [comment, setComment] = useState<string>("");
 
   const submitForm = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const id = selectedLocation?.id!;
-    const feedback: FeedbackMutation = {rating, comment};
-    await dispatch(createFeedback({feedback, id}));
-    await dispatch(fetchLocationById(selectedLocation?.id!))
-    closeModal();
+    try {
+      e.preventDefault();
+      const id = selectedLocation?.id!;
+      const feedback: FeedbackMutation = {rating, comment};
+      await dispatch(createFeedback({feedback, id})).unwrap();
+      await dispatch(fetchLocationById(selectedLocation?.id!))
+      closeModal();
+    } catch (e) {
+      await router.push('/auth');
+    }
   };
 
   return (

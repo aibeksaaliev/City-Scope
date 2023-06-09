@@ -11,7 +11,7 @@ import { red } from "@mui/material/colors";
 import IconButton from "@mui/material/IconButton";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CardContent from "@mui/material/CardContent";
@@ -30,12 +30,13 @@ import { selectUser } from "@/features/users/usersSlice";
 import CreateFeedbackForm from "@/components/Forms/LocationForms/CreateFeedbackForm";
 import FeedbackCard from "@/components/Cards/FeedbackCard";
 import { fetchLocationById } from "@/features/locations/locationsThunks";
+import { router } from "next/client";
 
 interface Props {
   id: number;
 }
 
-const LocationFullCard: React.FC<Props> = ({id}) => {
+const LocationFullCard: React.FC<Props> = ({ id }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const selectedLocation = useAppSelector(selectSelectedLocation);
@@ -56,8 +57,12 @@ const LocationFullCard: React.FC<Props> = ({id}) => {
     setModalStatus(false);
   };
 
-  const addToFavorites = (locationID: number) => {
-    dispatch(addLocationToFavorites(locationID));
+  const addToFavorites = async (locationID: number) => {
+    try {
+      await dispatch(addLocationToFavorites(locationID)).unwrap();
+    } catch (e) {
+      await router.push("/auth");
+    }
   };
 
   useEffect(() => {
@@ -82,7 +87,7 @@ const LocationFullCard: React.FC<Props> = ({id}) => {
           variant="contained"
           onClick={closeFullCard}
         >
-          <ArrowBackIcon/>
+          <ArrowBackIcon />
         </Button>
         <Divider />
         <Card>
@@ -154,7 +159,7 @@ const LocationFullCard: React.FC<Props> = ({id}) => {
               </Box>
             </Box>
             {selectedLocation?.feedbacks.map((feedback) => {
-              return <FeedbackCard key={feedback.id} feedback={feedback}/>;
+              return <FeedbackCard key={feedback.id} feedback={feedback} />;
             })}
           </CardContent>
           <CardActions sx={{ width: "100%" }}>
