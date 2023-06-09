@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { selectLocation, selectSelectedLocation, setClickedPlace } from "@/features/locations/locationsSlice";
+import { useAppDispatch } from "@/app/hooks";
+import { setClickedPlace } from "@/features/locations/locationsSlice";
 import { fetchLocations } from "@/features/locations/locationsThunks";
 import LocationPreviewCard from "@/components/Cards/LocationPreviewCard";
 import { LocationType } from "@/features/locations/types";
-import LocationFullCard from "@/components/Cards/LocationFullCard";
+import { useRouter } from "next/router";
 
 interface Props {
   locations: LocationType[];
@@ -15,10 +15,10 @@ interface Props {
 
 const LocationsList: React.FC<Props> = ({locations}) => {
   const dispatch = useAppDispatch();
-  const selectedLocation = useAppSelector(selectSelectedLocation);
+  const router = useRouter();
 
-  const handleLocationClick = (location: LocationType) => {
-    dispatch(selectLocation(location));
+  const handleLocationClick = async (id: number) => {
+    await router.push(`/categories/sub_categories/location/${id}`);
   };
 
   useEffect(() => {
@@ -39,13 +39,14 @@ const LocationsList: React.FC<Props> = ({locations}) => {
         <Divider />
         {locations ? (
           locations.map(location => {
-            return <LocationPreviewCard key={location.id} location={location} onClick={() => handleLocationClick(location)}/>
+            return <LocationPreviewCard
+              key={location.id}
+              location={location}
+              onClick={() => handleLocationClick(location.id)}
+            />
           })
         ) : null}
       </Box>
-      {selectedLocation && (
-        <LocationFullCard/>
-      )}
     </Drawer>
   );
 };

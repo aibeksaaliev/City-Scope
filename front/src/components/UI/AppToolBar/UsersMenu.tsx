@@ -14,7 +14,7 @@ import { logout } from "@/features/users/usersThunks";
 import EditModalForm from "@/components/Forms/AuthForms/EditModalForm";
 import { selectUser } from "@/features/users/usersSlice";
 import { apiURL } from "@/configs/constants";
-import { selectLocation } from "@/features/locations/locationsSlice";
+import { unsetLocation } from "@/features/locations/locationsSlice";
 
 const UsersMenu = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +37,7 @@ const UsersMenu = () => {
 
   const openAdminMenu = async () => {
     await router.push('/admin');
-    dispatch(selectLocation(null));
+    dispatch(unsetLocation());
   };
 
   const handleEditProfile = () => {

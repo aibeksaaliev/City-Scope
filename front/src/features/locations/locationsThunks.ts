@@ -81,6 +81,22 @@ export const fetchLocationsBySubCategory = createAsyncThunk<LocationType[], numb
   }
 );
 
+export const fetchLocationById = createAsyncThunk<LocationType, number, {rejectValue: GlobalError}>(
+  'locations/fetchLocationById',
+  async (id, {rejectWithValue}) => {
+    try {
+      const locationByIdResponse = await axiosApi.get(`/locations/${id}`);
+      return locationByIdResponse.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+
+      throw e;
+    }
+  }
+);
+
 export const fetchNonApprovedLocations = createAsyncThunk<LocationType[], void, {rejectValue: GlobalError}>(
   'locations/fetchNonApprovedLocations',
   async (_, {rejectWithValue}) => {

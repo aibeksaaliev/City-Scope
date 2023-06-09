@@ -8,12 +8,11 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { getAddressByCoordinates } from "@/features/locations/locationsThunks";
 import {
   selectClickedPlace,
-  selectLocation,
   selectLocationsBySubCategory,
   setClickedPlace,
   setCoordinates
 } from "@/features/locations/locationsSlice";
-import { CoordinatesType, LocationType } from "@/features/locations/types";
+import { CoordinatesType } from "@/features/locations/types";
 import LocationMarker from "@/components/LeafletMap/LocationMarker";
 import { useRouter } from "next/router";
 
@@ -24,8 +23,8 @@ const LeafletMap = () => {
   const selectedLocations = useAppSelector(selectLocationsBySubCategory);
   const clickedPlace = useAppSelector(selectClickedPlace);
 
-  const handleLocationClick = (location: LocationType) => {
-    dispatch(selectLocation(location));
+  const handleLocationClick = async (id: number) => {
+    await router.push(`/categories/sub_categories/location/${id}`)
   };
 
   const MapEvents = () => {
@@ -64,7 +63,7 @@ const LeafletMap = () => {
               coordinates={coordinates}
               key={location.id}
               title={location.title}
-              onClick={() => handleLocationClick(location)}
+              onClick={() => handleLocationClick(location.id)}
             />
           })
         ) : null}

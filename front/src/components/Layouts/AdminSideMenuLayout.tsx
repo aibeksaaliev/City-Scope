@@ -3,26 +3,18 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import {
-  selectAddress, selectLocation,
-  selectLocations,
-  selectNonApprovedLocations,
-  selectSelectedLocation
-} from "@/features/locations/locationsSlice";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AddressCard from "@/components/Cards/AddressCard";
-import { fetchLocations, fetchNonApprovedLocations } from "@/features/locations/locationsThunks";
+import { selectNonApprovedLocations } from "@/features/locations/locationsSlice";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { fetchNonApprovedLocations } from "@/features/locations/locationsThunks";
 import LocationPreviewCard from "@/components/Cards/LocationPreviewCard";
 import { Button } from "@mui/material";
 import CreateCategoriesForm from "@/components/Forms/LocationForms/CreateCategoriesForm";
-import LocationsList from "@/components/Layouts/LocationsList";
-import { LocationType } from "@/features/locations/types";
-import LocationFullCard from "@/components/Cards/LocationFullCard";
+import { useRouter } from "next/router";
 
 const AdminSideMenuLayout = ({ }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const nonApprovedLocations = useAppSelector(selectNonApprovedLocations);
-  const selectedLocation = useAppSelector(selectSelectedLocation);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -37,8 +29,8 @@ const AdminSideMenuLayout = ({ }) => {
     setIsModalOpen(false);
   };
 
-  const handleLocationClick = (location: LocationType) => {
-    dispatch(selectLocation(location));
+  const handleLocationClick = async (id: number) => {
+    await router.push(`/categories/sub_categories/location/${id}`)
   };
 
 
@@ -64,12 +56,9 @@ const AdminSideMenuLayout = ({ }) => {
         <CreateCategoriesForm isOpen={isModalOpen} onClose={closeModal}/>
         <Divider/>
         {nonApprovedLocations.map(location => {
-          return <LocationPreviewCard location={location} key={location.id} onClick={() => handleLocationClick(location)}/>
+          return <LocationPreviewCard location={location} key={location.id} onClick={() => handleLocationClick(location.id)}/>
         })}
       </Box>
-      {selectedLocation && (
-        <LocationFullCard/>
-      )}
     </Drawer>
   );
 };

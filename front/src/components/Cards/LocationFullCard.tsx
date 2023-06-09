@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import { Box, Button, CardMedia } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { selectLocation, selectSelectedLocation } from "@/features/locations/locationsSlice";
+import { selectSelectedLocation, unsetLocation } from "@/features/locations/locationsSlice";
 import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -28,8 +28,13 @@ import { addLocationToFavorites } from "@/features/users/usersThunks";
 import { selectUser } from "@/features/users/usersSlice";
 import CreateFeedbackForm from "@/components/Forms/LocationForms/CreateFeedbackForm";
 import FeedbackCard from "@/components/Cards/FeedbackCard";
+import { fetchLocationById } from "@/features/locations/locationsThunks";
 
-const LocationFullCard = () => {
+interface Props {
+  id: number;
+}
+
+const LocationFullCard: React.FC<Props> = ({id}) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const selectedLocation = useAppSelector(selectSelectedLocation);
@@ -38,7 +43,8 @@ const LocationFullCard = () => {
   const favoriteStatus = user && user.favoriteLocations.some((location) => location.id === selectedLocation?.id);
 
   const closeFullCard = () => {
-    dispatch(selectLocation(null));
+    dispatch(unsetLocation());
+    history.back();
   };
 
   const openCreateFeedbackForm = () => {
@@ -52,6 +58,12 @@ const LocationFullCard = () => {
   const addToFavorites = (locationID: number) => {
     dispatch(addLocationToFavorites(locationID));
   };
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchLocationById(id));
+    }
+  }, [dispatch, id]);
 
   return (
     <Drawer

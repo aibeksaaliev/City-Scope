@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   approveLocation,
-  createLocation,
+  createLocation, fetchLocationById,
   fetchLocations, fetchLocationsByAddress, fetchLocationsBySubCategory,
   fetchNonApprovedLocations,
   getAddressByCoordinates
@@ -52,8 +52,8 @@ export const locationsSlice = createSlice({
     setCoordinates: (state, { payload: data }) => {
       state.currentCoordinates = data;
     },
-    selectLocation: (state, { payload: data }) => {
-      state.selectedLocation = data;
+    unsetLocation: (state) => {
+      state.selectedLocation = null;
     },
     setClickedPlace: (state, { payload: coordinates }) => {
       state.clickedPlace = coordinates as LatLngExpression | null;
@@ -113,6 +113,16 @@ export const locationsSlice = createSlice({
       state.locationsError = error || null;
     });
 
+    builder.addCase(fetchLocationById.pending, (state) => {
+      state.locationsLoading = true;
+    }).addCase(fetchLocationById.fulfilled, (state, { payload: data }) => {
+      state.selectedLocation = data;
+    }).addCase(fetchLocationById.rejected, (state, { payload: error }) => {
+      state.locationsLoading = false;
+      state.locationsError = error || null;
+    });
+
+
     builder.addCase(approveLocation.pending, (state) => {
       state.approveLoading = true;
     }).addCase(approveLocation.fulfilled, (state) => {
@@ -126,7 +136,7 @@ export const locationsSlice = createSlice({
 
 export const locationsReducer = locationsSlice.reducer;
 
-export const { setCoordinates, selectLocation, setClickedPlace } = locationsSlice.actions;
+export const { setCoordinates, unsetLocation, setClickedPlace } = locationsSlice.actions;
 export const selectAddress = (state: RootState) => state.locations.address;
 export const selectCoordinates = (state: RootState) => state.locations.currentCoordinates;
 export const selectCreateLocationLoading = (state: RootState) => state.locations.createLocationLoading;
