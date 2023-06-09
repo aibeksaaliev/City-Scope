@@ -77,13 +77,13 @@ const UsersMenu = () => {
         sx={{mt: 2}}
       >
         <Box sx={{borderBottom: "1px solid #333333", pb: 1}}>
-          <MenuItem onClick={() => router.push('/my-profile')}>
+          <MenuItem onClick={() => router.push('/my-locations')}>
             <ListItemIcon>
               <LocationOnIcon/>
             </ListItemIcon>
             My locations
           </MenuItem>
-          <MenuItem onClick={() => router.push('/my-courses')}>
+          <MenuItem onClick={() => router.push('/my-favorites')}>
             <ListItemIcon>
               <BookmarkIcon/>
             </ListItemIcon>

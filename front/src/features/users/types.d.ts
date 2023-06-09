@@ -33,6 +33,7 @@ export interface UserType {
   registeredAt: Date;
   updatedAt: Date;
   lastLogin: Date;
+  locations: LocationType[];
   favoriteLocations: LocationType[];
 }
 
