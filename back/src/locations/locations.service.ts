@@ -76,6 +76,7 @@ export class LocationsService {
       .leftJoinAndSelect('feedback.user', 'feedbackUser')
       .leftJoinAndSelect('feedback.location', 'feedbackLocation')
       .where('subCategory.id = :subCategoryId', { subCategoryId })
+      .andWhere('location.isApproved = :isApproved', { isApproved: true })
       .getMany();
   }
 

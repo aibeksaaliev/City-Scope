@@ -57,7 +57,10 @@ export class UsersService {
     };
 
     await this.userRepository.update(user.id, updatedInfo);
-    return this.userRepository.findOne({ where: { id: user.id } });
+    return this.userRepository.findOne({
+      where: { id: user.id },
+      relations: ['favoriteLocations'],
+    });
   }
 
   async blockProfile(options: BlockUserDto) {

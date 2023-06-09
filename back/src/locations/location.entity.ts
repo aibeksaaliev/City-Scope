@@ -50,6 +50,9 @@ export class Location {
   @Column()
   contacts: string;
 
+  @Column({ default: 0 })
+  rating: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

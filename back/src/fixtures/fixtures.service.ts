@@ -262,6 +262,7 @@ export class FixturesService {
       ],
       subCategory: subCategory1ToMainCategory2,
       user: user,
+      isApproved: false,
     });
 
     await this.locationRepository.save(location1);

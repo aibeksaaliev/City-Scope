@@ -7,6 +7,6 @@ export class RoleGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest() as UserRequest;
     const user = request.user as User | undefined;
-    return user.role === 'user';
+    return user.role === 'admin';
   }
 }
