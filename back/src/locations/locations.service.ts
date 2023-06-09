@@ -67,6 +67,8 @@ export class LocationsService {
       .createQueryBuilder('location')
       .leftJoinAndSelect('location.subCategory', 'subCategory')
       .leftJoinAndSelect('location.feedbacks', 'feedback')
+      .leftJoinAndSelect('feedback.user', 'feedbackUser')
+      .leftJoinAndSelect('feedback.location', 'feedbackLocation')
       .where('subCategory.id = :subCategoryId', { subCategoryId })
       .getMany();
   }

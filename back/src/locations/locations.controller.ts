@@ -6,12 +6,12 @@ import {
   Get,
   Param,
   Patch,
-  Post, Query,
+  Post,
   Req,
   UploadedFiles,
   UseGuards,
-  UseInterceptors
-} from "@nestjs/common";
+  UseInterceptors,
+} from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/createLocation.dto';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
