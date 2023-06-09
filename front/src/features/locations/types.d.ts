@@ -1,3 +1,5 @@
+import { FeedbackType } from "@/features/feedacks/types";
+
 export interface CoordinatesType {
   lat: string;
   lng: string;
@@ -37,6 +39,7 @@ export interface LocationType {
   title: string;
   updatedAt: Date;
   workingHours: string;
+  feedbacks: FeedbackType[];
 }
 
 export interface ApproveLocationType {

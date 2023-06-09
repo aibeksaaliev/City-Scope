@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import { Box, Button, CardMedia } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -27,16 +27,26 @@ import CardActions from "@mui/material/CardActions";
 import { addLocationToFavorites } from "@/features/users/usersThunks";
 import { selectUser } from "@/features/users/usersSlice";
 import CreateFeedbackForm from "@/components/Forms/LocationForms/CreateFeedbackForm";
+import FeedbackCard from "@/components/Cards/FeedbackCard";
 
 const LocationFullCard = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const selectedLocation = useAppSelector(selectSelectedLocation);
+  const [modalStatus, setModalStatus] = useState(false);
 
   const favoriteStatus = user && user.favoriteLocations.some((location) => location.id === selectedLocation?.id);
 
   const closeFullCard = () => {
     dispatch(selectLocation(null));
+  };
+
+  const openCreateFeedbackForm = () => {
+    setModalStatus(true);
+  };
+
+  const closeCreateFeedbackForm = () => {
+    setModalStatus(false);
   };
 
   const addToFavorites = (locationID: number) => {
@@ -128,6 +138,9 @@ const LocationFullCard = () => {
                 <Typography sx={{ fontSize: "15px", textTransform: "uppercase" }}>Reviews</Typography>
               </Box>
             </Box>
+            {selectedLocation?.feedbacks.map((feedback) => {
+              return <FeedbackCard key={feedback.id} feedback={feedback}/>;
+            })}
             {/*<ApproveLocationForm id={selectedLocation?.id!}/>*/}
           </CardContent>
           <CardActions sx={{ width: "100%" }}>
@@ -139,8 +152,9 @@ const LocationFullCard = () => {
           variant="contained"
           fullWidth
           sx={{ backgroundColor: "#333333", color: "#FFFFFF" }}
+          onClick={openCreateFeedbackForm}
         >Leave a review</Button>
-        {/*<CreateFeedbackForm />*/}
+        <CreateFeedbackForm isModalOpen={modalStatus} closeModal={closeCreateFeedbackForm} />
       </Box>
     </Drawer>
   );

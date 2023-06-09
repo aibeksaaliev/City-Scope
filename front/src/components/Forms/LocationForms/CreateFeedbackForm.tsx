@@ -6,21 +6,27 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { createFeedback } from "@/features/feedacks/FeedbacksThunks";
 import { selectSelectedLocation } from "@/features/locations/locationsSlice";
 
-const CreateFeedbackForm = () => {
+interface Props {
+  isModalOpen: boolean;
+  closeModal: () => void;
+}
+
+const CreateFeedbackForm: React.FC<Props> = ({isModalOpen, closeModal}) => {
   const dispatch = useAppDispatch();
   const selectedLocation = useAppSelector(selectSelectedLocation);
   const [rating, setRating] = useState<number | null>(0);
   const [comment, setComment] = useState<string>("");
 
-  const submitForm = (e: React.FormEvent) => {
+  const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     const id = selectedLocation?.id!;
     const feedback: FeedbackMutation = {rating, comment};
-    dispatch(createFeedback({feedback, id}));
+    await dispatch(createFeedback({feedback, id}));
+    closeModal();
   };
 
   return (
-    <Dialog open={true}>
+    <Dialog open={isModalOpen} onClose={closeModal}>
       <DialogTitle sx={{ fontSize: "16px" }}>
         Leave a review
       </DialogTitle>
