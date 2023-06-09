@@ -8,9 +8,7 @@ import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import { LocationType } from "@/features/locations/types";
 import Divider from "@mui/material/Divider";
-import { Button } from "@mui/material";
-import { useAppSelector } from "@/app/hooks";
-import { selectUser } from "@/features/users/usersSlice";
+import { Button, Rating } from "@mui/material";
 
 interface Props {
   location: LocationType;
@@ -18,7 +16,9 @@ interface Props {
 }
 
 const LocationPreviewCard: React.FC<Props> = ({location, onClick}) => {
-  const user = useAppSelector(selectUser);
+  const rating = location.feedbacks.reduce((acc, feedback) => {
+    return acc + feedback.rating;
+  }, 0);
 
   return (
     <Card sx={{ maxWidth: 350, mb: 1 }} onClick={onClick}>
@@ -30,16 +30,16 @@ const LocationPreviewCard: React.FC<Props> = ({location, onClick}) => {
         }
         title={location.title}
         subheader={location.description}
-        onClick={(e) => e.stopPropagation()}
       />
       <CardContent>
+        <Rating defaultValue={rating} readOnly/>
         <Typography variant="body2" color="text.secondary">
           {location.address}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
 
-        {user && user.role === "admin" ? (
+        {!location.isApproved ? (
           <Button
             onClick={onClick}
           >

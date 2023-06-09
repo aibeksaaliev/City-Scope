@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Drawer from "@mui/material/Drawer";
 import { Box, Button, CardMedia } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -11,9 +11,7 @@ import { red } from "@mui/material/colors";
 import IconButton from "@mui/material/IconButton";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -25,39 +23,23 @@ import "swiper/css/scrollbar";
 import "swiper/swiper-bundle.css";
 import { apiURL } from "@/configs/constants";
 import CardActions from "@mui/material/CardActions";
-import { addLocationToFavorites } from "@/features/users/usersThunks";
 import { selectUser } from "@/features/users/usersSlice";
-import CreateFeedbackForm from "@/components/Forms/LocationForms/CreateFeedbackForm";
 import FeedbackCard from "@/components/Cards/FeedbackCard";
 import { fetchLocationById } from "@/features/locations/locationsThunks";
+import ApproveLocationForm from "@/components/Forms/LocationForms/ApproveLocationForm";
 
 interface Props {
   id: number;
 }
 
-const LocationFullCard: React.FC<Props> = ({id}) => {
+const ApproveLocationCard: React.FC<Props> = ({id}) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const selectedLocation = useAppSelector(selectSelectedLocation);
-  const [modalStatus, setModalStatus] = useState(false);
-
-  const favoriteStatus = user && user.favoriteLocations.some((location) => location.id === selectedLocation?.id);
 
   const closeFullCard = () => {
     dispatch(unsetLocation());
     history.back();
-  };
-
-  const openCreateFeedbackForm = () => {
-    setModalStatus(true);
-  };
-
-  const closeCreateFeedbackForm = () => {
-    setModalStatus(false);
-  };
-
-  const addToFavorites = (locationID: number) => {
-    dispatch(addLocationToFavorites(locationID));
   };
 
   useEffect(() => {
@@ -91,11 +73,6 @@ const LocationFullCard: React.FC<Props> = ({id}) => {
               <Avatar sx={{ bgcolor: red[500], fontSize: "10px" }} aria-label="recipe">
                 LOGO
               </Avatar>
-            }
-            action={
-              <IconButton onClick={() => addToFavorites(selectedLocation?.id!)}>
-                {favoriteStatus ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-              </IconButton>
             }
             title={selectedLocation?.title}
             subheader={selectedLocation?.description}
@@ -156,22 +133,14 @@ const LocationFullCard: React.FC<Props> = ({id}) => {
             {selectedLocation?.feedbacks.map((feedback) => {
               return <FeedbackCard key={feedback.id} feedback={feedback}/>;
             })}
+            {user && user.role === "admin" && <ApproveLocationForm id={selectedLocation?.id!}/>}
           </CardContent>
           <CardActions sx={{ width: "100%" }}>
           </CardActions>
         </Card>
       </Box>
-      <Box sx={{ position: "sticky", top: "100%" }}>
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ backgroundColor: "#333333", color: "#FFFFFF" }}
-          onClick={openCreateFeedbackForm}
-        >Leave a review</Button>
-        <CreateFeedbackForm isModalOpen={modalStatus} closeModal={closeCreateFeedbackForm} />
-      </Box>
     </Drawer>
   );
 };
 
-export default LocationFullCard;
+export default ApproveLocationCard;

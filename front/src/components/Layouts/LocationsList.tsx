@@ -23,7 +23,7 @@ const LocationsList: React.FC<Props> = ({locations}) => {
 
   useEffect(() => {
     dispatch(setClickedPlace(null));
-    dispatch(fetchLocations());
+    // dispatch(fetchLocations());
   }, [dispatch]);
 
   return (

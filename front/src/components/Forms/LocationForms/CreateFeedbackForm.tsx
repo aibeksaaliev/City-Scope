@@ -5,6 +5,7 @@ import { LoadingButton } from "@mui/lab";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { createFeedback } from "@/features/feedacks/FeedbacksThunks";
 import { selectSelectedLocation } from "@/features/locations/locationsSlice";
+import { fetchLocationById } from "@/features/locations/locationsThunks";
 
 interface Props {
   isModalOpen: boolean;
@@ -22,6 +23,7 @@ const CreateFeedbackForm: React.FC<Props> = ({isModalOpen, closeModal}) => {
     const id = selectedLocation?.id!;
     const feedback: FeedbackMutation = {rating, comment};
     await dispatch(createFeedback({feedback, id}));
+    await dispatch(fetchLocationById(selectedLocation?.id!))
     closeModal();
   };
 

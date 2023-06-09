@@ -5,7 +5,7 @@ import { ApproveLocationType } from "@/features/locations/types";
 import { fetchMainCategories, fetchSubCategories } from "@/features/categories/categoriesThunks";
 import { selectCategories, selectSubCategories } from "@/features/categories/categoriesSlice";
 import { approveLocation } from "@/features/locations/locationsThunks";
-import { selectLocation } from "@/features/locations/locationsSlice";
+import { unsetLocation } from "@/features/locations/locationsSlice";
 
 interface Props {
   id: number;
@@ -19,9 +19,12 @@ const ApproveLocationForm: React.FC<Props> = ({id}) => {
     subCategoryId: "",
     status: true,
   });
+  const [mainCategory, setMainCategory] = useState("");
 
   const categoryChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(fetchSubCategories(parseInt(e.target.value)));
+    setMainCategory(e.target.value);
+    setCategory(prevState => ({...prevState, subCategoryId: ""}));
   };
 
   const subCategoryChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +34,7 @@ const ApproveLocationForm: React.FC<Props> = ({id}) => {
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(approveLocation({data: category, id})).unwrap();
-    dispatch(selectLocation(null));
+    dispatch(unsetLocation());
   };
 
   useEffect(() => {
@@ -47,9 +50,10 @@ const ApproveLocationForm: React.FC<Props> = ({id}) => {
             fullWidth
             name="mainCategory"
             label="Main Category"
+            value={mainCategory}
             onChange={categoryChangeHandler}
           >
-            <MenuItem value="" disabled>
+            <MenuItem disabled>
               Select main category
             </MenuItem>
             {categories.map((category) => (
@@ -65,9 +69,10 @@ const ApproveLocationForm: React.FC<Props> = ({id}) => {
             fullWidth
             name="subCategory"
             label="Sub Category"
+            value={category.subCategoryId}
             onChange={subCategoryChangeHandler}
           >
-            <MenuItem value="" disabled>
+            <MenuItem defaultValue="" disabled>
               Select sub category
             </MenuItem>
             {subCategories ? (

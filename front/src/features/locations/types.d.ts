@@ -40,6 +40,7 @@ export interface LocationType {
   updatedAt: Date;
   workingHours: string;
   feedbacks: FeedbackType[];
+  rating: number;
 }
 
 export interface ApproveLocationType {

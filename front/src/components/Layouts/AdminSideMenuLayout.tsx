@@ -5,13 +5,16 @@ import Divider from "@mui/material/Divider";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectNonApprovedLocations } from "@/features/locations/locationsSlice";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { fetchNonApprovedLocations } from "@/features/locations/locationsThunks";
+import { fetchLocationById, fetchNonApprovedLocations } from "@/features/locations/locationsThunks";
 import LocationPreviewCard from "@/components/Cards/LocationPreviewCard";
 import { Button } from "@mui/material";
 import CreateCategoriesForm from "@/components/Forms/LocationForms/CreateCategoriesForm";
 import { useRouter } from "next/router";
+import { selectUser } from "@/features/users/usersSlice";
+import isAdmin from "@/components/Layouts/IsAdmin";
 
 const AdminSideMenuLayout = ({ }) => {
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const nonApprovedLocations = useAppSelector(selectNonApprovedLocations);
@@ -30,9 +33,9 @@ const AdminSideMenuLayout = ({ }) => {
   };
 
   const handleLocationClick = async (id: number) => {
-    await router.push(`/categories/sub_categories/location/${id}`)
+    await router.push(`/admin/approve_location/${id}`);
+    await dispatch(fetchLocationById(id));
   };
-
 
   return (
     <Drawer
@@ -56,11 +59,15 @@ const AdminSideMenuLayout = ({ }) => {
         <CreateCategoriesForm isOpen={isModalOpen} onClose={closeModal}/>
         <Divider/>
         {nonApprovedLocations.map(location => {
-          return <LocationPreviewCard location={location} key={location.id} onClick={() => handleLocationClick(location.id)}/>
+          return <LocationPreviewCard
+            location={location}
+            key={location.id}
+            onClick={() => handleLocationClick(location.id)}
+          />
         })}
       </Box>
     </Drawer>
   );
 };
 
-export default AdminSideMenuLayout;
+export default isAdmin(AdminSideMenuLayout);
