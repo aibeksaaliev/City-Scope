@@ -18,7 +18,13 @@ export class LocationsService {
   ) {}
 
   async findById(id: number) {
-    return await this.locationRepository.findOne({ where: { id } });
+    return this.locationRepository
+      .createQueryBuilder('location')
+      .where({ id })
+      .leftJoinAndSelect('location.feedbacks', 'feedback')
+      .leftJoinAndSelect('feedback.user', 'feedbackUser')
+      .leftJoinAndSelect('feedback.location', 'feedbackLocation')
+      .getOne();
   }
 
   async createLocation(
