@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import CreateLocationForm from "@/components/Forms/LocationForms/CreateLocationForm";
+import { useAppSelector } from "@/app/hooks";
+import { selectUser } from "@/features/users/usersSlice";
+import { router } from "next/client";
 
 interface Props {
   address: string;
 }
 
 const AddressCard: React.FC<Props> = ({address}) => {
+  const user = useAppSelector(selectUser);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const addOrganization = () => {
+    if (!user) {
+      router.push('/auth');
+      return;
+    }
     setIsModalOpen(true);
   };
 
