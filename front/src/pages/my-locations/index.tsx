@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectUser } from "@/features/users/usersSlice";
 
 const Index = () => {
-  const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
   return (

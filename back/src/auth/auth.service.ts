@@ -66,9 +66,17 @@ export class AuthService {
         });
 
         await user.generateToken();
-        return await this.userRepository.save(user);
+        await this.userRepository.save(user);
       }
-      return user;
+      return this.userRepository.findOne({
+        where: { id: user.id },
+        relations: [
+          'locations',
+          'favoriteLocations',
+          'feedbacks',
+          'locations.feedbacks',
+        ],
+      });
     } catch (e) {
       throw new BadRequestException(e.message);
     }

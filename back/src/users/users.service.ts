@@ -22,14 +22,24 @@ export class UsersService {
     await this.userRepository.save(user);
     return this.userRepository.findOne({
       where: { id: user.id },
-      relations: ['favoriteLocations', 'locations'],
+      relations: [
+        'favoriteLocations',
+        'feedbacks',
+        'locations',
+        'locations.feedbacks',
+      ],
     });
   }
 
   async findByEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email },
-      relations: ['favoriteLocations', 'locations'],
+      relations: [
+        'favoriteLocations',
+        'feedbacks',
+        'locations',
+        'locations.feedbacks',
+      ],
     });
   }
 
@@ -63,7 +73,7 @@ export class UsersService {
     await this.userRepository.update(user.id, updatedInfo);
     return this.userRepository.findOne({
       where: { id: user.id },
-      relations: ['favoriteLocations'],
+      relations: ['favoriteLocations', 'feedbacks', 'locations'],
     });
   }
 
