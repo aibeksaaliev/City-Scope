@@ -65,7 +65,10 @@ export class LocationsService {
   }
 
   async getAllNonApprovedLocations() {
-    return await this.locationRepository.find({ where: { isApproved: false } });
+    return await this.locationRepository.find({
+      where: { isApproved: false },
+      relations: ['feedbacks', 'users'],
+    });
   }
 
   async gelLocationsBySubCategory(subCategoryId: number) {
